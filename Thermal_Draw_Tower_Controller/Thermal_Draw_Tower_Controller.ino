@@ -64,41 +64,6 @@ const int stepsPerRev = 3200; // number of steps per revolution of the screw, ba
 unsigned long previousMillis = 0; // stores the last time timer was updated
 const long interval = 200; //interval at which to refresh feed and winder speeds and update display (milliseconds)
 
-void countdown() {
-  //displays a simple 3 second countdown on screen
-    display.clearDisplay(); // Clear the buffer
-    display.setTextSize(1);
-    display.setTextColor(WHITE);
-    display.setCursor(0, 0);
-    display.println("STARTING IN:");
-    display.println("3...");
-    Serial.println("Limit switches detected! Feed motor starting in:");
-    Serial.println("3...");
-    display.display();
-    delay(1000);
-
-    display.clearDisplay(); // Clear the buffer
-    display.setTextSize(1);
-    display.setTextColor(WHITE);
-    display.setCursor(0, 0);
-    display.println("STARTING IN:");
-    display.println("2...");
-    Serial.println("2...");
-    display.display();
-    delay(1000);
-
-    display.clearDisplay(); // Clear the buffer
-    display.setTextSize(1);
-    display.setTextColor(WHITE);
-    display.setCursor(0, 0);
-    display.println("STARTING IN:");
-    display.println("1...");
-    Serial.println("1...");
-    display.display();
-    delay(1000); 
-    display.clearDisplay(); // Clear the buffer
-}
-
 void setup() {
  
   // Assign pin mode for each limit switch pin, set both switches to GND
@@ -187,7 +152,7 @@ void loop() {
       fiber_diameter *= 9.77517; // analogRead outputs 1023 bits per 10V, then 2000 microns per V
 
       // TASK 5: Output readings to serial monitor and display
-      Serial.print(millis()/100);
+      Serial.print(millis()/1000);
       Serial.print(",");
       Serial.print(feeder_speed);
       Serial.print(",");
