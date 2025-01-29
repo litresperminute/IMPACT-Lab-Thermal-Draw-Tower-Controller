@@ -126,18 +126,15 @@ void loop() {
   
       // TASK 1: Update winder speed
       float winder_pot_value = analogRead(winder_pot_value_pin); // Might be computationally better not to initialize this every loop but idk
+      int digipotvalue = winder_pot_value/1024*128;
       winder_pot_value *= 0.2237; // Analog voltage reading to linear winding speed conversion = 0.2237mm/(s*Volt)
       winder_pot_value *= 60; // converts mm/s to mm/min
       winder_pot_value /= 1000; // converts mm/min to m/min
-      
-      
-      /*
+      //*
       //OPTIONAL SECTION: here you can give the Digi-pot a desired setting
-      ds3502.setWiper(winder_pot_value);
-      Serial.print("DS2502_wiper_setting");
-      Serial.print(winder_pot_value);
-      Serial.println(" mm/min");
-      */
+      ds3502.setWiper(digipotvalue);
+      //Serial.print("DS2502_wiper_setting");
+      //*/
 
       // TASK 2: Update feed speed
       float feeder_pot_value = analogRead(feeder_speed_pot);
@@ -160,9 +157,10 @@ void loop() {
       Serial.print(",");
       Serial.print(fiber_diameter);
       Serial.print(",");
-      Serial.println(20000*sqrt(feeder_speed/winder_pot_value/1000));
+      Serial.print(20000*sqrt(feeder_speed/winder_pot_value/1000));
+      Serial.print(",");
+      Serial.println(digipotvalue);
     
-
       // Display the linear feed speed
       display.clearDisplay();// Clear the buffer
       display.setTextSize(1);
