@@ -126,15 +126,11 @@ void loop() {
   
       // TASK 1: Update winder speed
       float winder_pot_value = analogRead(winder_pot_value_pin); // Might be computationally better not to initialize this every loop but idk
-      int digipotvalue = winder_pot_value/1024*128;
+      int digipotvalue = winder_pot_value/1024*128; // Convert analog read value (0~1024) to the input range of the DS3052 digital pot (0~127)
       winder_pot_value *= 0.2237; // Analog voltage reading to linear winding speed conversion = 0.2237mm/(s*Volt)
       winder_pot_value *= 60; // converts mm/s to mm/min
       winder_pot_value /= 1000; // converts mm/min to m/min
-      //*
-      //OPTIONAL SECTION: here you can give the Digi-pot a desired setting
-      ds3502.setWiper(digipotvalue);
-      //Serial.print("DS2502_wiper_setting");
-      //*/
+      ds3502.setWiper(digipotvalue); // here you can give the Digi-pot a desired setting!
 
       // TASK 2: Update feed speed
       float feeder_pot_value = analogRead(feeder_speed_pot);
