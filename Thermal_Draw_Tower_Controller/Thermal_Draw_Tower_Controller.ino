@@ -64,6 +64,15 @@ const int stepsPerRev = 3200; // number of steps per revolution of the screw, ba
 unsigned long previousMillis = 0; // stores the last time timer was updated
 const long interval = 200; //interval at which to refresh feed and winder speeds and update display (milliseconds)
 
+// defining controls for the winder
+int setpoint = 500 // diameter set point
+float kp_gain = 10 // proporitonal control gain
+float error = 0 // initialize error 
+float Delay = 500 // a delay time (ms) for system to react with
+float int_speed = 
+
+
+
 void countdown() {
   //displays a simple 3 second countdown on screen
     display.clearDisplay(); // Clear the buffer
