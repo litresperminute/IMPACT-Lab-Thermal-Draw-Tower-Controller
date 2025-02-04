@@ -47,7 +47,7 @@ ezButton neg_limit_switch(pos_limit_read);
 #define winder_pot_value_pin A1 // winder speed rotary pontentiometer wiper pin on the arduino
 #define winder_pin A2 // this pin is reading the toggled winder value, either from the FILAWINDER or from the winder rotary potentiometer
 #define tension_pin A3 // this pin is reading the signal + output from the tensiometer after being voltage-divided from 0-10V to 0-5V on the breadboard using 2 split 10 kohm resistors
-#define micrometer_pin A4 // this pin is reading the LS-9030 micrometer signal from the LS-9051 controller module's analog output
+#define mi // this pin is reading the LS-9030 micrometer signal from the LS-9051 controller module's analog output
 
 
 // define feed motor input pins
@@ -65,48 +65,14 @@ unsigned long previousMillis = 0; // stores the last time timer was updated
 const long interval = 200; //interval at which to refresh feed and winder speeds and update display (milliseconds)
 
 // defining controls for the winder
-int setpoint = 500 // diameter set point
+bool control_w = true
+int setpoint = 500 // diameter micrometer set point
 float kp_gain = 10 // proporitonal control gain
 float error = 0 // initialize error 
 float Delay = 500 // a delay time (ms) for system to react with
-float int_speed = 
+float fiber_diameter = 0 // starting value
+float winder_pot_value = 3 // m/min This is the value to initialize the tower. Need to get this started.
 
-
-
-void countdown() {
-  //displays a simple 3 second countdown on screen
-    display.clearDisplay(); // Clear the buffer
-    display.setTextSize(1);
-    display.setTextColor(WHITE);
-    display.setCursor(0, 0);
-    display.println("STARTING IN:");
-    display.println("3...");
-    Serial.println("Limit switches detected! Feed motor starting in:");
-    Serial.println("3...");
-    display.display();
-    delay(1000);
-
-    display.clearDisplay(); // Clear the buffer
-    display.setTextSize(1);
-    display.setTextColor(WHITE);
-    display.setCursor(0, 0);
-    display.println("STARTING IN:");
-    display.println("2...");
-    Serial.println("2...");
-    display.display();
-    delay(1000);
-
-    display.clearDisplay(); // Clear the buffer
-    display.setTextSize(1);
-    display.setTextColor(WHITE);
-    display.setCursor(0, 0);
-    display.println("STARTING IN:");
-    display.println("1...");
-    Serial.println("1...");
-    display.display();
-    delay(1000); 
-    display.clearDisplay(); // Clear the buffer
-}
 
 void setup() {
  
@@ -168,12 +134,26 @@ void loop() {
       // Save the last time the interval completed
       previousMillis = currentMillis;
   
-      // TASK 1: Update winder speed
-      float winder_pot_value = analogRead(winder_pot_value_pin); // Might be computationally better not to initialize this every loop but idk
-      winder_pot_value *= 0.2237; // Analog voltage reading to linear winding speed conversion = 0.2237mm/(s*Volt)
-      winder_pot_value *= 60; // converts mm/s to mm/min
-      winder_pot_value /= 1000; // converts mm/min to m/min
-      
+      // TASK 1: Update winder speed 
+      // Check if we aree using controls
+      if (control_w == true) {
+        error = (fiber_diameter - setpoint) / ((fiber_diameter + setpoint)/2)
+        gain = abs(error * kp_gain)
+        delay(Delay) // give the system time? May not want this since we are operating every 200 ms anyways.
+        if (error > 0) {
+          new_winder_speed = winder_pot_value + gain // increase the speed to decrease the diameter
+        else 
+          new_winder_speed = winder_pot_value - gain // decrease the speed to increase the diameter
+        }
+        
+        analogWrite(winder_pin, new_winder_speed) // will need to replace the winder pin
+
+      else
+        float winder_pot_value = analogRead(winder_pot_value_pin); // Might be computationally better not to initialize this every loop but idk
+        winder_pot_value *= 0.2237; // Analog voltage reading to linear winding speed conversion = 0.2237mm/(s*Volt)
+        winder_pot_value *= 60; // converts mm/s to mm/min
+        winder_pot_value /= 1000; // converts mm/min to m/min
+      }
       
       /*
       //OPTIONAL SECTION: here you can give the Digi-pot a desired setting
