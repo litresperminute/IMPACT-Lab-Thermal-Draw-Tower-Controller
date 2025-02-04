@@ -65,14 +65,28 @@ unsigned long previousMillis = 0; // stores the last time timer was updated
 const long interval = 200; //interval at which to refresh feed and winder speeds and update display (milliseconds)
 
 // defining controls for the winder
-bool control_w = true
+bool control_winder = true
 int setpoint = 500 // diameter micrometer set point
-float kp_gain = 10 // proporitonal control gain
+float kp_gain = 5 // proporitonal control gain
 float error = 0 // initialize error 
 float Delay = 500 // a delay time (ms) for system to react with
 float fiber_diameter = 0 // starting value
 float winder_pot_value = 3 // m/min This is the value to initialize the tower. Need to get this started.
+winder_pot_value *= 1000 // convert from m/min to mm/min
+winder_pot_value /= 60 // convert to mm/s
+windere_pot_value /= 0.2237 //Aconert to voltage to read = 0.2237mm/(s*Volt)
+// this is to convert the signal to a voltage this may not be right. **the 0.2237 is from the winder I think it applies but it may not. 
+analogWrite(winder_pin, winder_pot_value) // do I need to move to setup() **
 
+// defining controls for the feeder
+bool control_feeder = false
+float feeder_pot_value = 1
+feeder_pot_value /= 1023;
+feeder_pot_value *= 100;
+float feeder_speed = feeder_pot_value*5.08/3200*60; //conversion from potentiometer reading to feed speed in mm/min.  (feed speed) x (mm/rev) / (steps/rev) x (60 s/min)
+feeder.setSpeed(feeder_pot_value); //do I need to move to setup()**
+
+kp_gain_feeder = 1
 
 void setup() {
  
@@ -104,6 +118,7 @@ void setup() {
   display.clearDisplay(); // Clear the OLED display buffer
 
   //Initialize feeder speed
+  //would need to make an if and get rid of this?
   feeder.setMaxSpeed(stepsPerRev/2); // Set max motor speed in steps per second. Must be positive.  Library documentation says speeds exceeding 1000 are unreliable but 3200 steps = 1 revolution = 5.08 mm with current controller DIP switch settings
   // with the max speed set this way, the speed limit will be based on the DIP switch settings.  In any case, one revolution per second = 5.08 mm/s
   float feeder_pot_value = analogRead(feeder_speed_pot); // replace with map command?
@@ -136,17 +151,30 @@ void loop() {
   
       // TASK 1: Update winder speed 
       // Check if we aree using controls
-      if (control_w == true) {
-        error = (fiber_diameter - setpoint) / ((fiber_diameter + setpoint)/2)
+      if (control_winderr == true) {
+        error = (fiber_diameter - setpoint) / ((fiber_diameter + setpoint)/2) // is there a diffeerent error metric to go for?
         gain = abs(error * kp_gain)
         delay(Delay) // give the system time? May not want this since we are operating every 200 ms anyways.
         if (error > 0) {
           new_winder_speed = winder_pot_value + gain // increase the speed to decrease the diameter
+          Serial.print(gain); Serial.print("Speed Increased by")
+
         else 
           new_winder_speed = winder_pot_value - gain // decrease the speed to increase the diameter
+          Serial.print(gain); Serial.print("Speed Decreased by")
         }
+        winder_pin_pot_value = new_winder_speed
+        winder_pot_value *= 1000 // convert from m/min to mm/min
+        winder_pot_value /= 60 // convert to mm/s
+        windere_pot_value /= 0.2237 //Convert to Analog voltage = 0.2237mm/(s*Volt)
+        // this is to convert the signal to a voltage this may not be right. **the 0.2237 is from the winder I think it applies but it may not. 
         
         analogWrite(winder_pin, new_winder_speed) // will need to replace the winder pin
+        
+        // print new speed, error, speed increase or decrease (above), setpoint
+        Serial.print(new_winder_speed); Serial.print("New winder speed")
+        Serial.print(error); Serial.print("Current Error")
+        Serial.print(setpoint); Serial.print("Diameter Aimed for")
 
       else
         float winder_pot_value = analogRead(winder_pot_value_pin); // Might be computationally better not to initialize this every loop but idk
@@ -164,12 +192,28 @@ void loop() {
       */
 
       // TASK 2: Update feed speed
-      float feeder_pot_value = analogRead(feeder_speed_pot);
-      feeder_pot_value /= 1023;
-      feeder_pot_value *= 100;
-      float feeder_speed = feeder_pot_value*5.08/3200*60; //conversion from potentiometer reading to feed speed in mm/min.  (feed speed) x (mm/rev) / (steps/rev) x (60 s/min)
-      feeder.setSpeed(feeder_pot_value);
+      // if we want to control the feeder speed
+      if (control_feeder = true) {
+        error = (fiber_diameter - setpoint) / ((fiber_diameter + setpoint)/2) // is there a diffeerent error metric to go for?
+        gain = abs(error * kp_gain_feeder)
+        if (error > 0) {
+          new_feeder_speed = feeder_pot_value + gain // increase the speed to decrease the diameter
+          Serial.print(gain); Serial.print("Speed Increased by")
+
+        else 
+          new_feed_speed = feeder_pot_value - gain // decrease the speed to increase the diameter
+          Serial.print(gain); Serial.print("Speed Decreased by")
+        }
+        
       
+      else 
+        float feeder_pot_value = analogRead(feeder_speed_pot);
+        feeder_pot_value /= 1023;
+        feeder_pot_value *= 100;
+        float feeder_speed = feeder_pot_value*5.08/3200*60; //conversion from potentiometer reading to feed speed in mm/min.  (feed speed) x (mm/rev) / (steps/rev) x (60 s/min)
+        feeder.setSpeed(feeder_pot_value);
+      }
+     
       // TASK 3: Read micrometer and tension data
       float tension_Value = analogRead(tension_pin); 
       float fiber_diameter = analogRead(micrometer_pin);
