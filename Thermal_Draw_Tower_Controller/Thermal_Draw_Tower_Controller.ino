@@ -66,7 +66,7 @@ const long interval = 200; //interval at which to refresh feed and winder speeds
 
 // defining controls for the winder
 bool control_winder = true
-int setpoint = 500 // diameter micrometer set point
+int setpoint = 500 // diameter micrometer set point in microns
 float kp_gain = 5 // proporitonal control gain
 float error = 0 // initialize error 
 float Delay = 500 // a delay time (ms) for system to react with
@@ -152,7 +152,7 @@ void loop() {
       // TASK 1: Update winder speed 
       // Check if we aree using controls
       if (control_winderr == true) {
-        error = (fiber_diameter - setpoint) / ((fiber_diameter + setpoint)/2) // is there a diffeerent error metric to go for?
+        error = (fiber_diameter - setpoint) / (setpoint) // is there a diffeerent error metric to go for?
         gain = abs(error * kp_gain)
         delay(Delay) // give the system time? May not want this since we are operating every 200 ms anyways.
         if (error > 0) {
@@ -166,7 +166,7 @@ void loop() {
         winder_pin_pot_value = new_winder_speed
         winder_pot_value *= 1000 // convert from m/min to mm/min
         winder_pot_value /= 60 // convert to mm/s
-        windere_pot_value /= 0.2237 //Convert to Analog voltage = 0.2237mm/(s*Volt)
+        winder_pot_value /= 0.2237 //Convert to Analog voltage = 0.2237mm/(s*Volt)
         // this is to convert the signal to a voltage this may not be right. **the 0.2237 is from the winder I think it applies but it may not. 
         
         analogWrite(winder_pin, new_winder_speed) // will need to replace the winder pin
