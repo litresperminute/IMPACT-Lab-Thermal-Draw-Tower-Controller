@@ -288,17 +288,37 @@ void control_function(bool control_winder, bool control_feeder, float &winder_po
   // Check if we aree using controls
   if (control_winder == true) {
     error = (fiber_diameter - setpoint) / (setpoint); // is there a diffeerent error metric to go for?
-    float gain = abs(error * kp_gain);
-    
+    float prop_gain = abs(error * kp_gain);
+
+    // future add integral values where integral wind up is accounted for 
+    float ki_winder = 0;
+    float int_gain = 0;
+
+    // Future task, add in derivative terms if needed
+    float kd_winder = 0;
+    float der_gain = 0;
+
+    // total gain
+    float tot_gain = prop_gain + int_gain + der_gain;
+
+    // "plant"
 
     if (error > 0) {
-      float new_winder_speed = winder_pot_value + gain; // increase the speed to decrease the diameter
-      Serial.print(gain); Serial.print("Speed Increased by");
+      float new_winder_speed = winder_pot_value + tot_gain; // increase the speed to decrease the diameter
+      Serial.print(tot_gain); Serial.print("Speed Increased by");
       }
       else {
-        float new_winder_speed = winder_pot_value - gain; // decrease the speed to increase the diameter
-      Serial.print(gain); Serial.print("Speed Decreased by");
+        float new_winder_speed = winder_pot_value - tot_gain; // decrease the speed to increase the diameter
+      Serial.print(tot_gain); Serial.print("Speed Decreased by");
     }
+
+    //check if the winder the winder is at max or min speed.
+    if (new_winder_speed > max_winder_speed) {
+      new_winder_speed = max_winder_speed;
+      }
+    if (new_winder_speed < min_winder_speed) {
+      new_winder_speed = min_winder_speed;
+      }
     
     convert_winder_to_voltage(new_winder_speed);
 
