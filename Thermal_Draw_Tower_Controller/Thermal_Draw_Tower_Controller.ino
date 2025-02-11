@@ -80,8 +80,6 @@ void convert_winder_to_voltage(float &winder_pot_value) {
   winder_pot_value /= 60.0; // convert to mm/s
   winder_pot_value /= 0.2237; //Aconert to voltage to read = 0.2237mm/(s*Volt)
 }
-
-
 // this is to convert the signal to a voltage this may not be right. **the 0.2237 is from the winder I think it applies but it may not.
 
 // min and max values of the system
@@ -171,7 +169,7 @@ void loop() {
       previousMillis = currentMillis;
 
       // this starts the control aspect
-      control_function(control_winder, control_feeder, winder_pot_value, feeder_speed);
+      control_function(control_winder, control_feeder, winder_pot_value, feeder_speed); //units of the winder_pot_value going in is in volts needs to be converted
 
       // TASK 3: Read micrometer and tension data
       float tension_Value = analogRead(tension_pin);
@@ -276,13 +274,17 @@ void loop() {
   }
 }
 
-void control_function(bool control_winder, bool control_feeder, float &winder_pot_value, float &feeder_pot_valuee) {
+void control_function(bool control_winder, bool control_feeder, float &winder_pot_value, float &feeder_pot_value) {
 
   float new_winder_speed;
   //Task 0: Have the speed estimate
-  
+  // "plant"
+  float plug_diameter = 25.4 //mm 1 inch plug - should check
+  float target_diameter = setpoint/1000 // convert microns to the mm
+  // feeder speed is already defined with variable feeder_speed - may not be defined in here though . defined in mm/min for now it should be estimated that the feeder speed is constant.
+  float target_winder_speed = feeder_speed * plug_diameter^2 / targer_diameter^2 / 1000 // this will output the in m/min
 
-
+  //convert the winder_pot_value back to mm/min
   
   // TASK 1: Update winder speed
   // Check if we aree using controls
@@ -301,8 +303,7 @@ void control_function(bool control_winder, bool control_feeder, float &winder_po
     // total gain
     float tot_gain = prop_gain + int_gain + der_gain;
 
-    // "plant"
-
+    // what is the winder_pot_value??? what are the units?
     if (error > 0) {
       float new_winder_speed = winder_pot_value + tot_gain; // increase the speed to decrease the diameter
       Serial.print(tot_gain); Serial.print("Speed Increased by");
@@ -343,13 +344,26 @@ void control_function(bool control_winder, bool control_feeder, float &winder_po
     Serial.print(winder_pot_value);
     Serial.println(" mm/min");
   */
-
+  // could be useful to translate this to a different function
   // TASK 2: Update feed speed
   // if we want to control the feeder speed
   float new_feeder_speed;
   if (control_feeder = true) {
     error = (fiber_diameter - setpoint) / ((fiber_diameter + setpoint) / 2); // is there a diffeerent error metric to go for?
+
+    //may need too adjust the feeder_speed variable
+
+    
+    //proportional gain
     float gain = abs(error * kp_gain_feeder);
+
+    //integral gain
+
+
+    //derivative gain
+
+    
+    //increase or decrease speed
     if (error > 0) {
       new_feeder_speed = feeder_pot_value + gain; // increase the speed to decrease the diameter
       Serial.print(gain); Serial.print("Speed Increased by");
@@ -358,6 +372,8 @@ void control_function(bool control_winder, bool control_feeder, float &winder_po
         new_feeder_speed = feeder_pot_value - gain; // decrease the speed to increase the diameter
         Serial.print(gain); Serial.print("Speed Decreased by");
     }
+  // add mine and maxes
+  
 
   }
     else {
