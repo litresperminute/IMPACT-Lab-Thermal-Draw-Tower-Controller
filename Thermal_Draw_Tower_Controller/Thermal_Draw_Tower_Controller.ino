@@ -59,6 +59,7 @@ AccelStepper feeder(interface, step_pin, dir_pin);  // initialize feed stepper m
 AccelStepper setPinsInverted(true, false, false);
 const int stepsPerRev = 3200; // number of steps per revolution of the screw, based on the DIP switch settings of the microstepper controller (OFF OFF ON = 3200)
 
+#include <math.h> //math library for rounding
 
 // define CLOCK: the frequency that the controller checks and updates motor speeds
 unsigned long previousMillis = 0; // stores the last time timer was updated
@@ -66,12 +67,12 @@ const long interval = 200; //interval at which to refresh feed and winder speeds
 
 // defining controls for the winder
 bool control_winder = true;
-int setpoint = 500; // diameter micrometer set point in microns
+int setpoint = 1818; // diameter micrometer set point in microns
 float error = 0; // initialize error
 float fiber_diameter = 0; // starting value
 
 // Inital Values
-float kp_gain = 5; // proporitonal control gain
+float kp_gain = 0.02; // proporitonal control gain
 float winder_pot_value = 3; // m/min This is the value to initialize the tower. Need to get this started.
 
 //function for quick conversion
@@ -144,8 +145,13 @@ void setup() {
   Serial.println("time, Feed (mm/min), Wind (m/min), diameter (um), predicted diameter (um)");
   
   // Initialize the winder
-  convert_winder_to_voltage(winder_pot_value);
-  analogWrite(winder_pin, winder_pot_value); // do I need to move to setup() **
+  //convert_winder_to_voltage(winder_pot_value);
+  //Writing to Digi pot
+  ds3502.setWiper(int(winder_pot_value/max_winder_speed*127));
+  Serial.print("DS2502_wiper_setting");
+  Serial.print(winder_pot_value);
+  Serial.println(" mm/min");
+  delay(10000);
 }
 
 void loop() {
@@ -154,8 +160,6 @@ void loop() {
   neg_limit_switch.loop();
   int pos_limit_check = pos_limit_switch.getState(); // check limit switch state using ezButton (de-bounce) library command
   int neg_limit_check = neg_limit_switch.getState();
-
-
 
   if (pos_limit_check == 0 && neg_limit_check == 0) { // if neither limit switch is triggered (opens on contact) then the program runs as usual.
 
@@ -279,12 +283,17 @@ void control_function(bool control_winder, bool control_feeder, float &winder_po
   float new_winder_speed;
   //Task 0: Have the speed estimate
   // "plant"
-  float plug_diameter = 25.4 //mm 1 inch plug - should check
-  float target_diameter = setpoint/1000 // convert microns to the mm
+  float plug_diameter = 25.4; //mm 1 inch plug - should check
+  float target_diameter = setpoint/1000; // convert microns to the mm
   // feeder speed is already defined with variable feeder_speed - may not be defined in here though . defined in mm/min for now it should be estimated that the feeder speed is constant.
-  float target_winder_speed = feeder_speed * plug_diameter^2 / targer_diameter^2 / 1000 // this will output the in m/min
+  float target_winder_speed = feeder_speed * sq(plug_diameter) / sq(target_diameter) / 1000; // this will output the in m/min
 
   //convert the winder_pot_value back to mm/min
+  /*
+  winder_pot_value *= 0.2237; // Analog voltage reading to linear winding speed conversion = 0.2237mm/(s*Volt)
+  winder_pot_value *= 60; // converts mm/s to mm/min
+  winder_pot_value /= 1000; // converts mm/min to m/min
+  */
   
   // TASK 1: Update winder speed
   // Check if we aree using controls
@@ -301,16 +310,16 @@ void control_function(bool control_winder, bool control_feeder, float &winder_po
     float der_gain = 0;
 
     // total gain
-    float tot_gain = prop_gain + int_gain + der_gain;
+    float tot_gain = (prop_gain + int_gain + der_gain)*target_winder_speed;
 
     // what is the winder_pot_value??? what are the units?
     if (error > 0) {
       float new_winder_speed = winder_pot_value + tot_gain; // increase the speed to decrease the diameter
-      Serial.print(tot_gain); Serial.print("Speed Increased by");
+      Serial.print(" Speed Increased by: "); Serial.print(tot_gain); 
       }
       else {
         float new_winder_speed = winder_pot_value - tot_gain; // decrease the speed to increase the diameter
-      Serial.print(tot_gain); Serial.print("Speed Decreased by");
+      Serial.print(" Speed Decreased by: "); Serial.print(tot_gain); 
     }
 
     //check if the winder the winder is at max or min speed.
@@ -322,13 +331,21 @@ void control_function(bool control_winder, bool control_feeder, float &winder_po
       }
     
     convert_winder_to_voltage(new_winder_speed);
+    //convert back to winder_pot_value so that it writes it back
+    winder_pot_value = new_winder_speed;
 
-    analogWrite(winder_pin, new_winder_speed); // will need to replace the winder pin
+  
+    //Writing to Digi pot
+    ds3502.setWiper(25);
+    Serial.print("DS2502_wiper_setting");
+    //Serial.print(winder_pot_value);
+    //Serial.println(" mm/min");
+
 
     // print new speed, error, speed increase or decrease (above), setpoint
-    Serial.print(new_winder_speed); Serial.print("New winder speed");
-    Serial.print(error); Serial.print("Current Error");
-    Serial.print(setpoint); Serial.print("Diameter Aimed for");
+    Serial.print(" New winder speed: "); Serial.print(new_winder_speed); 
+    Serial.print(" Current Error: "); Serial.print(error); 
+    Serial.print(" Diameter Aimed for: "); Serial.print(setpoint); 
   }
     else {
       float winder_pot_value = analogRead(winder_pot_value_pin); // Might be computationally better not to initialize this every loop but idk
@@ -337,13 +354,6 @@ void control_function(bool control_winder, bool control_feeder, float &winder_po
       winder_pot_value /= 1000; // converts mm/min to m/min
   }
 
-  /*
-    //OPTIONAL SECTION: here you can give the Digi-pot a desired setting
-    ds3502.setWiper(winder_pot_value);
-    Serial.print("DS2502_wiper_setting");
-    Serial.print(winder_pot_value);
-    Serial.println(" mm/min");
-  */
   // could be useful to translate this to a different function
   // TASK 2: Update feed speed
   // if we want to control the feeder speed
