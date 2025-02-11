@@ -1,17 +1,17 @@
-/* 
-ARDUNIO CONNECTION AND PINOUT SUMMARY:
-LED Display - GND/+5V/SCL/SDA (daisy-chained I2C cable)
-Digital Pot - GND/+5V/SCL/SDA (I2C cable plugged into +5V/GND/SCL/SDA Pins)
-Rotary Pot 1 - GND/A0/+5V (Used to manually control the feeder speed by adjusting the resistance/read voltage of the wiper pin from 0 - 5V in 10 turns)
-Rotary Pot 2 - GND/A1/+5V (Used to manually control the digital potentiometer by adjusting the resistance/read voltage of the wiper pin from 0 - 5V in 1 turnwhich controls the winder speed)
-Fans x 2 - GND/+5V (on either side of the stepper controller to push air through. No power or on/off control incorporated)
-Stepper: Enable / Direction / Pulse - D8/D7/D6 (enable is routed through an on/off switch || Direction is routed to a breadboard row, to which the centre pin from the switch is connected, the other two pins being tied to GND and +5V)
-(The intention of this decision is to enable the direction to be brute-force overtaken by the GND/+5V rails when closed in those positions, but to allow the digital pin to automate direction in the middle position.)
-Positive Carriage Limit Switch (bottom): +5V/GND - D2(write)/D3(read) (use interrupt pins to ensure stop command is triggered immediately?)
-Negative Carriage Limit Switch (top): +5V/GND - D5(write)/D4(read)
-Tensiometer Analog Signal: GND/+10V - voltage split to 5V max with 2x10kohm resistors and connected to pin A2 (GND is connected to device power supply, but may be floating and need to be properly grounded in the future)
-Winder Control Switch: Rot Pot 2 Wiper/On-Board Filabot Pot Wiper - GND/A3/+5V || GND/A3/+5V (voltage supplied here from filabot, not sourced from Arduino)
-Keyence Analog Diameter Readout: (Not sure what will be required but presumably at least 1 digital or analog pin connected that provides data from the keyence power block thing)
+/*
+  ARDUNIO CONNECTION AND PINOUT SUMMARY:
+  LED Display - GND/+5V/SCL/SDA (daisy-chained I2C cable)
+  Digital Pot - GND/+5V/SCL/SDA (I2C cable plugged into +5V/GND/SCL/SDA Pins)
+  Rotary Pot 1 - GND/A0/+5V (Used to manually control the feeder speed by adjusting the resistance/read voltage of the wiper pin from 0 - 5V in 10 turns)
+  Rotary Pot 2 - GND/A1/+5V (Used to manually control the digital potentiometer by adjusting the resistance/read voltage of the wiper pin from 0 - 5V in 1 turnwhich controls the winder speed)
+  Fans x 2 - GND/+5V (on either side of the stepper controller to push air through. No power or on/off control incorporated)
+  Stepper: Enable / Direction / Pulse - D8/D7/D6 (enable is routed through an on/off switch || Direction is routed to a breadboard row, to which the centre pin from the switch is connected, the other two pins being tied to GND and +5V)
+  (The intention of this decision is to enable the direction to be brute-force overtaken by the GND/+5V rails when closed in those positions, but to allow the digital pin to automate direction in the middle position.)
+  Positive Carriage Limit Switch (bottom): +5V/GND - D2(write)/D3(read) (use interrupt pins to ensure stop command is triggered immediately?)
+  Negative Carriage Limit Switch (top): +5V/GND - D5(write)/D4(read)
+  Tensiometer Analog Signal: GND/+10V - voltage split to 5V max with 2x10kohm resistors and connected to pin A2 (GND is connected to device power supply, but may be floating and need to be properly grounded in the future)
+  Winder Control Switch: Rot Pot 2 Wiper/On-Board Filabot Pot Wiper - GND/A3/+5V || GND/A3/+5V (voltage supplied here from filabot, not sourced from Arduino)
+  Keyence Analog Diameter Readout: (Not sure what will be required but presumably at least 1 digital or analog pin connected that provides data from the keyence power block thing)
 */
 
 
@@ -47,8 +47,8 @@ ezButton neg_limit_switch(pos_limit_read);
 #define winder_pot_value_pin A1 // winder speed rotary pontentiometer wiper pin on the arduino
 #define winder_pin A2 // this pin is reading the toggled winder value, either from the FILAWINDER or from the winder rotary potentiometer
 #define tension_pin A3 // this pin is reading the signal + output from the tensiometer after being voltage-divided from 0-10V to 0-5V on the breadboard using 2 split 10 kohm resistors
-#define mi // this pin is reading the LS-9030 micrometer signal from the LS-9051 controller module's analog output
-
+#define micrometer_pin A4 // this pin is reading the LS-9030 micrometer signal from the LS-9051 controller module's analog output
+//Check micrometer pin
 
 // define feed motor input pins
 #include <AccelStepper.h> // motor controller library
@@ -67,36 +67,38 @@ const long interval = 200; //interval at which to refresh feed and winder speeds
 // defining controls for the winder
 bool control_winder = true;
 int setpoint = 500; // diameter micrometer set point in microns
-float kp_gain = 5; // proporitonal control gain
-float error = 0; // initialize error 
-float Delay = 500; // a delay time (ms) for system to react with
+float error = 0; // initialize error
 float fiber_diameter = 0; // starting value
-float int_pot_value = 3; // m/min This is the value to initialize the tower. Need to get this started.
-// define a function
-float convert_winder_to_voltage(float winder_pot) {
+
+// Inital Values
+float kp_gain = 5; // proporitonal control gain
+float winder_pot_value = 3; // m/min This is the value to initialize the tower. Need to get this started.
+
+//function for quick conversion
+void convert_winder_to_voltage(float &winder_pot_value) {
   winder_pot_value *= 1000.0; // convert from m/min to mm/min
   winder_pot_value /= 60.0; // convert to mm/s
   winder_pot_value /= 0.2237; //Aconert to voltage to read = 0.2237mm/(s*Volt)
-  return winder_pot_value
 }
-winder_pot_value = convert_winder_to_voltage(int_pot_value)
-// this is to convert the signal to a voltage this may not be right. **the 0.2237 is from the winder I think it applies but it may not. 
-analogWrite(winder_pin, winder_pot_value;) // do I need to move to setup() **
+
+
+// this is to convert the signal to a voltage this may not be right. **the 0.2237 is from the winder I think it applies but it may not.
+
+// min and max values of the system
+float min_winder_speed = 0; // mm/min
+float max_winder_speed = 13730; // mm/min -> 13.73 m/min
 
 // defining controls for the feeder
 bool control_feeder = false;
-float feeder_pot_value = 1;
-feeder_pot_value /= 1023;
-feeder_pot_value *= 100;
-float feeder_speed = feeder_pot_value*5.08/3200*60; //conversion from potentiometer reading to feed speed in mm/min.  (feed speed) x (mm/rev) / (steps/rev) x (60 s/min)
-feeder.setSpeed(feeder_pot_value); //do I need to move to setup()**
+float feeder_speed = 1; // mm/min //this will intialize in the setup function
+float feeder_pot_value;
+float kp_gain_feeder = 1;
 
-kp_gain_feeder = 1;
 
 void setup() {
- 
+
   // Assign pin mode for each limit switch pin, set both switches to GND
-  pinMode(neg_limit_read, INPUT_PULLUP); 
+  pinMode(neg_limit_read, INPUT_PULLUP);
   pinMode(pos_limit_read, INPUT_PULLUP);
   pinMode(neg_limit_write, OUTPUT);
   pinMode(pos_limit_write, OUTPUT);
@@ -110,32 +112,46 @@ void setup() {
 
 
   Serial.begin(115200);
-  while (!Serial) { delay(1); } // Wait until serial port is opened
+  while (!Serial) {
+    delay(1);  // Wait until serial port is opened
+  }
 
   Serial.println("Adafruit DS3502 Test");
-  if (!ds3502.begin()) {  Serial.println("Couldn't find DS3502 chip"); /* while (1); */ }
+  if (!ds3502.begin()) {
+    Serial.println("Couldn't find DS3502 chip"); /* while (1); */
+  }
   Serial.println("Found DS3502 chip");
 
-  if(!display.begin(SSD1306_SWITCHCAPVCC, SCREEN_ADDRESS)) {  // SSD1306_SWITCHCAPVCC = generate display voltage from 3.3V internally
+  if (!display.begin(SSD1306_SWITCHCAPVCC, SCREEN_ADDRESS)) { // SSD1306_SWITCHCAPVCC = generate display voltage from 3.3V internally
     Serial.println(F("SSD1306 allocation failed"));
-    for(;;); // Don't proceed, loop forever
+    for (;;); // Don't proceed, loop forever
   }
   display.clearDisplay(); // Clear the OLED display buffer
 
   //Initialize feeder speed
   //would need to make an if and get rid of this?
-  feeder.setMaxSpeed(stepsPerRev/2); // Set max motor speed in steps per second. Must be positive.  Library documentation says speeds exceeding 1000 are unreliable but 3200 steps = 1 revolution = 5.08 mm with current controller DIP switch settings
+  feeder.setMaxSpeed(stepsPerRev / 2); // Set max motor speed in steps per second. Must be positive.  Library documentation says speeds exceeding 1000 are unreliable but 3200 steps = 1 revolution = 5.08 mm with current controller DIP switch settings
   // with the max speed set this way, the speed limit will be based on the DIP switch settings.  In any case, one revolution per second = 5.08 mm/s
-  float feeder_pot_value = analogRead(feeder_speed_pot); // replace with map command?
-  feeder_pot_value /= 1023;
-  feeder_pot_value *= 20;
-  float feeder_speed = feeder_pot_value*5.08/stepsPerRev*60; //conversion from potentiometer reading to feed speed in mm/min (5.08 mm per turn, 3200 steps per turn, 60 sec per minute)
-  feeder.setSpeed(feeder_pot_value);  
+  if (control_feeder = false) {
+    float feeder_pot_value = analogRead(feeder_speed_pot); // replace with map command?
+    feeder_pot_value /= 1023;
+    feeder_pot_value *= 20;
+    float feeder_speed = feeder_pot_value * 5.08 / stepsPerRev * 60; //conversion from potentiometer reading to feed speed in mm/min (5.08 mm per turn, 3200 steps per turn, 60 sec per minute)
+    }
+  if (control_feeder = true){
+    float feeder_pot_value = feeder_speed / 5.08 *stepsPerRev / 60;  //convert from mm/min to a readable value
+    }
+
+  feeder.setSpeed(feeder_pot_value);
   Serial.println("time, Feed (mm/min), Wind (m/min), diameter (um), predicted diameter (um)");
+  
+  // Initialize the winder
+  convert_winder_to_voltage(winder_pot_value);
+  analogWrite(winder_pin, winder_pot_value); // do I need to move to setup() **
 }
 
-void loop() {  
-  
+void loop() {
+
   pos_limit_switch.loop(); // begin limit switch de-bouncing loops
   neg_limit_switch.loop();
   int pos_limit_check = pos_limit_switch.getState(); // check limit switch state using ezButton (de-bounce) library command
@@ -143,7 +159,7 @@ void loop() {
 
 
 
-  if(pos_limit_check == 0 && neg_limit_check == 0) { // if neither limit switch is triggered (opens on contact) then the program runs as usual.
+  if (pos_limit_check == 0 && neg_limit_check == 0) { // if neither limit switch is triggered (opens on contact) then the program runs as usual.
 
     feeder.runSpeed(); // Runs feed motor. Need to run every iteration (as often as possible)
 
@@ -154,16 +170,16 @@ void loop() {
       // Save the last time the interval completed
       previousMillis = currentMillis;
 
-      // this starts the control aspect 
-      control_function(
-     
+      // this starts the control aspect
+      control_function(control_winder, control_feeder, winder_pot_value, feeder_speed);
+
       // TASK 3: Read micrometer and tension data
-      float tension_Value = analogRead(tension_pin); 
+      float tension_Value = analogRead(tension_pin);
       float fiber_diameter = analogRead(micrometer_pin);
       fiber_diameter *= 9.77517; // analogRead outputs 1023 bits per 10V, then 2000 microns per V
 
       // TASK 5: Output readings to serial monitor and display
-      Serial.print(millis()/100);
+      Serial.print(millis() / 100);
       Serial.print(",");
       Serial.print(feeder_speed);
       Serial.print(",");
@@ -171,8 +187,8 @@ void loop() {
       Serial.print(",");
       Serial.print(fiber_diameter);
       Serial.print(",");
-      Serial.println(20000*sqrt(feeder_speed/winder_pot_value/1000));
-    
+      Serial.println(20000 * sqrt(feeder_speed / winder_pot_value / 1000));
+
 
       // Display the linear feed speed
       display.clearDisplay();// Clear the buffer
@@ -187,24 +203,24 @@ void loop() {
       display.print(winder_pot_value);
       display.println("m/min");
       display.print("Pred. Dia:");
-      display.println(20000*sqrt(feeder_speed/winder_pot_value/1000));
+      display.println(20000 * sqrt(feeder_speed / winder_pot_value / 1000));
       display.print("Fiber Dia: ");
       display.print(fiber_diameter);
       display.println("um");
-      display.display(); 
+      display.display();
 
-    }    
+    }
 
   }
 
   //PROCEDURE AFTER POSITIVE LIMIT SWITCH IS REACHED (NO USER CONTROL DURING THIS SECTION)
-  if(pos_limit_check == 1 && neg_limit_check == 0) { // 
-    
+  if (pos_limit_check == 1 && neg_limit_check == 0) { //
+
     feeder.stop();
     //int reverseSpeed = -1000;feeder.maxSpeed()*-1
     //digitalWrite(dir_pin, 0);  // set the direction pin value to 0 (up)
     feeder.setSpeed(-400); // set speed to previously set maximum and direction to reverse (negative numbers)
-    
+
     display.clearDisplay();
     display.setTextSize(1);
     display.setTextColor(WHITE);
@@ -224,17 +240,17 @@ void loop() {
       //Serial.print(neg_limit_check);
       //Serial.print(" Direction Pin: ");
       //Serial.println(digitalRead(dir_pin));
-      feeder.runSpeed();  
-    } 
+      feeder.runSpeed();
+    }
     while (neg_limit_check == 0);
 
     Serial.println("END OF CARRIAGE RETURN LOOP");
-    display.clearDisplay(); 
+    display.clearDisplay();
   }
 
   //PROCEDURE AFTER NEGATIVE LIMIT SWITCH IS REACHED (NO USER CONTROL DURING THIS SECTION)
-  if(pos_limit_check == 0 && neg_limit_check == 1) {
-    
+  if (pos_limit_check == 0 && neg_limit_check == 1) {
+
     feeder.stop();
     //digitalWrite(dir_pin, 1);  // set the direction pin value to 1 (down)
     feeder.setSpeed(400);
@@ -250,7 +266,7 @@ void loop() {
     //Serial.println("Moving to Start Position Now.. Please Wait");
 
     delay(10);
-   
+
     for ( int i = 0; i <= 20; i++) {
       feeder.runSpeed();
       delay(10);
@@ -260,70 +276,75 @@ void loop() {
   }
 }
 
-void control_function(bool control_winder, bool control_feeder) {
-      
-      // TASK 1: Update winder speed 
-      // Check if we aree using controls
-      if (control_winder == true) {
-        error = (fiber_diameter - setpoint) / (setpoint); // is there a diffeerent error metric to go for?
-        gain = abs(error * kp_gain);
+void control_function(bool control_winder, bool control_feeder, float &winder_pot_value, float &feeder_pot_valuee) {
 
-        if (error > 0) {
-          new_winder_speed = winder_pot_value + gain; // increase the speed to decrease the diameter
-          Serial.print(gain); Serial.print("Speed Increased by");
+  float new_winder_speed;
+  //Task 0: Have the speed estimate
+  
 
-        else 
-          new_winder_speed = winder_pot_value - gain; // decrease the speed to increase the diameter
-          Serial.print(gain); Serial.print("Speed Decreased by");
-        }
-        winder_pin_pot_value = new_winder_speed; 
-        winder_pot_value *= 1000; // convert from m/min to mm/min
-        winder_pot_value /= 60; // convert to mm/s
-        winder_pot_value /= 0.2237; //Convert to Analog voltage = 0.2237mm/(s*Volt)
-        // this is to convert the signal to a voltage this may not be right. **the 0.2237 is from the winder I think it applies but it may not. 
-        
-        analogWrite(winder_pin, new_winder_speed); // will need to replace the winder pin
-        
-        // print new speed, error, speed increase or decrease (above), setpoint
-        Serial.print(new_winder_speed); Serial.print("New winder speed");
-        Serial.print(error); Serial.print("Current Error");
-        Serial.print(setpoint); Serial.print("Diameter Aimed for");
 
-      else
-        float winder_pot_value = analogRead(winder_pot_value_pin); // Might be computationally better not to initialize this every loop but idk
-        winder_pot_value *= 0.2237; // Analog voltage reading to linear winding speed conversion = 0.2237mm/(s*Volt)
-        winder_pot_value *= 60; // converts mm/s to mm/min
-        winder_pot_value /= 1000; // converts mm/min to m/min
+  
+  // TASK 1: Update winder speed
+  // Check if we aree using controls
+  if (control_winder == true) {
+    error = (fiber_diameter - setpoint) / (setpoint); // is there a diffeerent error metric to go for?
+    float gain = abs(error * kp_gain);
+    
+
+    if (error > 0) {
+      float new_winder_speed = winder_pot_value + gain; // increase the speed to decrease the diameter
+      Serial.print(gain); Serial.print("Speed Increased by");
       }
-      
-      /*
-      //OPTIONAL SECTION: here you can give the Digi-pot a desired setting
-      ds3502.setWiper(winder_pot_value);
-      Serial.print("DS2502_wiper_setting");
-      Serial.print(winder_pot_value);
-      Serial.println(" mm/min");
-      */
+      else {
+        float new_winder_speed = winder_pot_value - gain; // decrease the speed to increase the diameter
+      Serial.print(gain); Serial.print("Speed Decreased by");
+    }
+    
+    convert_winder_to_voltage(new_winder_speed);
 
-      // TASK 2: Update feed speed
-      // if we want to control the feeder speed
-      if (control_feeder = true) {
-        error = (fiber_diameter - setpoint) / ((fiber_diameter + setpoint)/2); // is there a diffeerent error metric to go for?
-        gain = abs(error * kp_gain_feeder);
-        if (error > 0) {
-          new_feeder_speed = feeder_pot_value + gain; // increase the speed to decrease the diameter
-          Serial.print(gain); Serial.print("Speed Increased by");
+    analogWrite(winder_pin, new_winder_speed); // will need to replace the winder pin
 
-        else 
-          new_feed_speed = feeder_pot_value - gain // decrease the speed to increase the diameter
-          Serial.print(gain); Serial.print("Speed Decreased by");
-        }
-        
-      
-      else 
-        float feeder_pot_value = analogRead(feeder_speed_pot);
-        feeder_pot_value /= 1023;
-        feeder_pot_value *= 100;
-        float feeder_speed = feeder_pot_value*5.08/3200*60; //conversion from potentiometer reading to feed speed in mm/min.  (feed speed) x (mm/rev) / (steps/rev) x (60 s/min)
-        feeder.setSpeed(feeder_pot_value);
-      }
+    // print new speed, error, speed increase or decrease (above), setpoint
+    Serial.print(new_winder_speed); Serial.print("New winder speed");
+    Serial.print(error); Serial.print("Current Error");
+    Serial.print(setpoint); Serial.print("Diameter Aimed for");
+  }
+    else {
+      float winder_pot_value = analogRead(winder_pot_value_pin); // Might be computationally better not to initialize this every loop but idk
+      winder_pot_value *= 0.2237; // Analog voltage reading to linear winding speed conversion = 0.2237mm/(s*Volt)
+      winder_pot_value *= 60; // converts mm/s to mm/min
+      winder_pot_value /= 1000; // converts mm/min to m/min
+  }
+
+  /*
+    //OPTIONAL SECTION: here you can give the Digi-pot a desired setting
+    ds3502.setWiper(winder_pot_value);
+    Serial.print("DS2502_wiper_setting");
+    Serial.print(winder_pot_value);
+    Serial.println(" mm/min");
+  */
+
+  // TASK 2: Update feed speed
+  // if we want to control the feeder speed
+  float new_feeder_speed;
+  if (control_feeder = true) {
+    error = (fiber_diameter - setpoint) / ((fiber_diameter + setpoint) / 2); // is there a diffeerent error metric to go for?
+    float gain = abs(error * kp_gain_feeder);
+    if (error > 0) {
+      new_feeder_speed = feeder_pot_value + gain; // increase the speed to decrease the diameter
+      Serial.print(gain); Serial.print("Speed Increased by");
+    }
+      else {
+        new_feeder_speed = feeder_pot_value - gain; // decrease the speed to increase the diameter
+        Serial.print(gain); Serial.print("Speed Decreased by");
+    }
+
+  }
+    else {
+      float feeder_pot_value = analogRead(feeder_speed_pot);
+    feeder_pot_value /= 1023;
+    feeder_pot_value *= 100;
+    float feeder_speed = feeder_pot_value * 5.08 / 3200 * 60; //conversion from potentiometer reading to feed speed in mm/min.  (feed speed) x (mm/rev) / (steps/rev) x (60 s/min)
+    feeder.setSpeed(feeder_pot_value);
+  }
 }
