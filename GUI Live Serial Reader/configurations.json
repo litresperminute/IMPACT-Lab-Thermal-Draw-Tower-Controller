@@ -1,0 +1,10 @@
+[
+    {
+        "configuration_name": "Thermal Draw",
+        "serial_variables": 0,
+        "plots": 0,
+        "baud_rate": 0,
+        "com_port": 0,
+        "csv_file": "No File"
+    }
+]
