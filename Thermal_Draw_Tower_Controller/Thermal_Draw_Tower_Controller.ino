@@ -65,6 +65,8 @@ const int stepsPerRev = 3200; // number of steps per revolution of the screw, ba
 unsigned long previousMillis = 0; // stores the last time timer was updated
 const long interval = 200; //interval at which to refresh feed and winder speeds and update display (milliseconds)
 
+
+//------------------------------------------------------------------------------------------------------------------------------------------------------------------------- 
 // defining controls for the winder
 bool control_winder = true;
 int setpoint = 1818; // diameter micrometer set point in microns
@@ -76,11 +78,15 @@ float kp_gain = 0.02; // proporitonal control gain
 float winder_pot_value = 3; // m/min This is the value to initialize the tower. Need to get this started.
 
 //function for quick conversion
+// Don't think this is required any more
+/*
 void convert_winder_to_voltage(float &winder_pot_value) {
   winder_pot_value *= 1000.0; // convert from m/min to mm/min
   winder_pot_value /= 60.0; // convert to mm/s
   winder_pot_value /= 0.2237; //Aconert to voltage to read = 0.2237mm/(s*Volt)
 }
+*/
+
 // this is to convert the signal to a voltage this may not be right. **the 0.2237 is from the winder I think it applies but it may not.
 
 // min and max values of the system
@@ -92,7 +98,7 @@ bool control_feeder = false;
 float feeder_speed = 1; // mm/min //this will intialize in the setup function
 float feeder_pot_value;
 float kp_gain_feeder = 1;
-
+//------------------------------------------------------------------------------------------------------------------------------------------------------------------------- 
 
 void setup() {
 
@@ -137,6 +143,7 @@ void setup() {
     feeder_pot_value *= 20;
     float feeder_speed = feeder_pot_value * 5.08 / stepsPerRev * 60; //conversion from potentiometer reading to feed speed in mm/min (5.08 mm per turn, 3200 steps per turn, 60 sec per minute)
     }
+//-------------------------------------------------------------------------------------------------------------------------------------------------------------------------     
   if (control_feeder = true){
     float feeder_pot_value = feeder_speed / 5.08 *stepsPerRev / 60;  //convert from mm/min to a readable value
     }
@@ -147,11 +154,13 @@ void setup() {
   // Initialize the winder
   //convert_winder_to_voltage(winder_pot_value);
   //Writing to Digi pot
-  ds3502.setWiper(int(winder_pot_value/max_winder_speed*127));
+  int winder_dig = (winder_pot_value/max_winder_speed*127*1000); // (m/min)/(mm/min) *1000 mm/min * 127 round to an integer if winder_pot_value  == 3 then this is 28 for the value
+  ds3502.setWiper(winder_dig);
   Serial.print("DS2502_wiper_setting");
   Serial.print(winder_pot_value);
-  Serial.println(" mm/min");
+  Serial.println("m/min");
   delay(10000);
+//------------------------------------------------------------------------------------------------------------------------------------------------------------------------- 
 }
 
 void loop() {
@@ -278,6 +287,8 @@ void loop() {
   }
 }
 
+
+//------------------------------------------------------------------------------------------------------------------------------------------------------------------------- 
 void control_function(bool control_winder, bool control_feeder, float &winder_pot_value, float &feeder_pot_value) {
 
   float new_winder_speed;
@@ -312,15 +323,18 @@ void control_function(bool control_winder, bool control_feeder, float &winder_po
     // total gain
     float tot_gain = (prop_gain + int_gain + der_gain)*target_winder_speed;
 
-    // what is the winder_pot_value??? what are the units?
+    // check if the error which checks if it is to big or to small.
+    /* Old code that is being kept out for now
     if (error > 0) {
       float new_winder_speed = winder_pot_value + tot_gain; // increase the speed to decrease the diameter
       Serial.print(" Speed Increased by: "); Serial.print(tot_gain); 
+      
       }
       else {
         float new_winder_speed = winder_pot_value - tot_gain; // decrease the speed to increase the diameter
       Serial.print(" Speed Decreased by: "); Serial.print(tot_gain); 
     }
+    */
 
     //check if the winder the winder is at max or min speed.
     if (new_winder_speed > max_winder_speed) {
@@ -330,16 +344,29 @@ void control_function(bool control_winder, bool control_feeder, float &winder_po
       new_winder_speed = min_winder_speed;
       }
     
-    convert_winder_to_voltage(new_winder_speed);
+    //convert_winder_to_voltage(new_winder_speed);
     //convert back to winder_pot_value so that it writes it back
     winder_pot_value = new_winder_speed;
 
+    int dig_pot = 28; // only here if it needs to be defined again
+    if (error > 0) {
+      dig_pot += 1;
+      }
+   
+    if (error < 0){
+      dig_pot -= 1;
+      }
+
   
     //Writing to Digi pot
-    ds3502.setWiper(25);
+    // formula to control with
+    //int dig_pot = (winder_pot_value * 1000 / max_winder_speed *127);
+
+    ds3502.setWiper(dig_pot);
     Serial.print("DS2502_wiper_setting");
     //Serial.print(winder_pot_value);
     //Serial.println(" mm/min");
+    //Serial.print(dig_pot);
 
 
     // print new speed, error, speed increase or decrease (above), setpoint
@@ -355,6 +382,8 @@ void control_function(bool control_winder, bool control_feeder, float &winder_po
   }
 
   // could be useful to translate this to a different function
+//------------------------------------------------------------------------------------------------------------------------------------------------------------------------- 
+  //Make a seperate function eventually
   // TASK 2: Update feed speed
   // if we want to control the feeder speed
   float new_feeder_speed;
@@ -382,7 +411,7 @@ void control_function(bool control_winder, bool control_feeder, float &winder_po
         new_feeder_speed = feeder_pot_value - gain; // decrease the speed to increase the diameter
         Serial.print(gain); Serial.print("Speed Decreased by");
     }
-  // add mine and maxes
+  // add mins and maxes
   
 
   }
