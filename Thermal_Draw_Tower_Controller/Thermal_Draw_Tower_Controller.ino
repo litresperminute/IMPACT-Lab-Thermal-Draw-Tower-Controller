@@ -297,10 +297,11 @@ void control_function(bool control_winder, bool control_feeder, float &winder_po
   float plug_diameter = 25.4; //mm 1 inch plug - should check
   float target_diameter = setpoint/1000; // convert microns to the mm
   // feeder speed is already defined with variable feeder_speed - may not be defined in here though . defined in mm/min for now it should be estimated that the feeder speed is constant.
-  float target_winder_speed = feeder_speed * sq(plug_diameter) / sq(target_diameter) / 1000; // this will output the in m/min
+  float target_winder_speed = feeder_speed * sq(plug_diameter) / sq(target_diameter) / 1000; // this will output the in m/min ~ 2.5 m/min
 
   //convert the winder_pot_value back to mm/min
   /*
+   * This likely is not needed and could be deleted.
   winder_pot_value *= 0.2237; // Analog voltage reading to linear winding speed conversion = 0.2237mm/(s*Volt)
   winder_pot_value *= 60; // converts mm/s to mm/min
   winder_pot_value /= 1000; // converts mm/min to m/min
