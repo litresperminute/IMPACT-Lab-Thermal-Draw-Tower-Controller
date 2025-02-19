@@ -66,25 +66,25 @@ unsigned long previousMillis = 0; // stores the last time timer was updated
 const long interval = 200; //interval at which to refresh feed and winder speeds and update display (milliseconds)
 
 
-//------------------------------------------------------------------------------------------------------------------------------------------------------------------------- 
+//-------------------------------------------------------------------------------------------------------------------------------------------------------------------------
 // defining controls for the winder
 bool control_winder = true;
-int setpoint = 1818; // diameter micrometer set point in microns
+int setpoint = 1770; // diameter micrometer set point in microns
 float error = 0; // initialize error
 float fiber_diameter = 0; // starting value
 
 // Inital Values
-float kp_gain = 0.02; // proporitonal control gain
+float kp_gain = 2; // proporitonal control gain
 float winder_pot_value = 3; // m/min This is the value to initialize the tower. Need to get this started.
 
 //function for quick conversion
 // Don't think this is required any more
 /*
-void convert_winder_to_voltage(float &winder_pot_value) {
+  void convert_winder_to_voltage(float &winder_pot_value) {
   winder_pot_value *= 1000.0; // convert from m/min to mm/min
   winder_pot_value /= 60.0; // convert to mm/s
   winder_pot_value /= 0.2237; //Aconert to voltage to read = 0.2237mm/(s*Volt)
-}
+  }
 */
 
 // this is to convert the signal to a voltage this may not be right. **the 0.2237 is from the winder I think it applies but it may not.
@@ -92,13 +92,14 @@ void convert_winder_to_voltage(float &winder_pot_value) {
 // min and max values of the system
 float min_winder_speed = 0; // mm/min
 float max_winder_speed = 13730; // mm/min -> 13.73 m/min
+int dig_pot = 28; // only here if it needs to be defined again
 
 // defining controls for the feeder
 bool control_feeder = false;
 float feeder_speed = 1; // mm/min //this will intialize in the setup function
 float feeder_pot_value;
 float kp_gain_feeder = 1;
-//------------------------------------------------------------------------------------------------------------------------------------------------------------------------- 
+//-------------------------------------------------------------------------------------------------------------------------------------------------------------------------
 
 void setup() {
 
@@ -142,25 +143,26 @@ void setup() {
     feeder_pot_value /= 1023;
     feeder_pot_value *= 20;
     float feeder_speed = feeder_pot_value * 5.08 / stepsPerRev * 60; //conversion from potentiometer reading to feed speed in mm/min (5.08 mm per turn, 3200 steps per turn, 60 sec per minute)
-    }
-//-------------------------------------------------------------------------------------------------------------------------------------------------------------------------     
-  if (control_feeder = true){
-    float feeder_pot_value = feeder_speed / 5.08 *stepsPerRev / 60;  //convert from mm/min to a readable value
-    }
+  }
+  //-------------------------------------------------------------------------------------------------------------------------------------------------------------------------
+  if (control_feeder = true) {
+    float feeder_pot_value = feeder_speed / 5.08 * stepsPerRev / 60; //convert from mm/min to a readable value
+  }
 
   feeder.setSpeed(feeder_pot_value);
   Serial.println("time, Feed (mm/min), Wind (m/min), diameter (um), predicted diameter (um)");
-  
+
   // Initialize the winder
   //convert_winder_to_voltage(winder_pot_value);
   //Writing to Digi pot
-  int winder_dig = (winder_pot_value/max_winder_speed*127*1000); // (m/min)/(mm/min) *1000 mm/m * 127 round to an integer if winder_pot_value  == 3 then this is 28 for the value
+  int winder_dig = (winder_pot_value / max_winder_speed * 127 * 1000); // (m/min)/(mm/min) *1000 mm/m * 127 round to an integer if winder_pot_value  == 3 then this is 28 for the value
+  float winder_speed = winder_dig / 127.0 * max_winder_speed/1000.0;
   ds3502.setWiper(winder_dig);
-  Serial.print("DS2502_wiper_setting");
-  Serial.print(winder_pot_value);
-  Serial.println("m/min");
+  Serial.print(" DS2502_wiper_setting ");
+  Serial.print(winder_speed);
+  Serial.println(" m/min");
   delay(10000);
-//------------------------------------------------------------------------------------------------------------------------------------------------------------------------- 
+  //-------------------------------------------------------------------------------------------------------------------------------------------------------------------------
 }
 
 void loop() {
@@ -181,24 +183,28 @@ void loop() {
       // Save the last time the interval completed
       previousMillis = currentMillis;
 
-      // this starts the control aspect
-      control_function(control_winder, control_feeder, winder_pot_value, feeder_speed); //units of the winder_pot_value going in is in volts needs to be converted
-
       // TASK 3: Read micrometer and tension data
       float tension_Value = analogRead(tension_pin);
       float fiber_diameter = analogRead(micrometer_pin);
       fiber_diameter *= 9.77517; // analogRead outputs 1023 bits per 10V, then 2000 microns per V
 
+      // this starts the control aspect
+      control_function(control_winder, control_feeder, winder_pot_value, feeder_speed, fiber_diameter, dig_pot); //units of the winder_pot_value going in is in volts needs to be converted
+
+
       // TASK 5: Output readings to serial monitor and display
+
       Serial.print(millis() / 100);
-      Serial.print(",");
+      Serial.print(", ");
       Serial.print(feeder_speed);
-      Serial.print(",");
+      Serial.print(", ");
       Serial.print(winder_pot_value);
-      Serial.print(",");
+      Serial.print(", ");
       Serial.print(fiber_diameter);
-      Serial.print(",");
+      Serial.print(", ");
       Serial.println(20000 * sqrt(feeder_speed / winder_pot_value / 1000));
+      Serial.println();
+
 
 
       // Display the linear feed speed
@@ -288,32 +294,32 @@ void loop() {
 }
 
 
-//------------------------------------------------------------------------------------------------------------------------------------------------------------------------- 
-void control_function(bool control_winder, bool control_feeder, float &winder_pot_value, float &feeder_pot_value) {
+//-------------------------------------------------------------------------------------------------------------------------------------------------------------------------
+void control_function(bool control_winder, bool control_feeder, float &winder_pot_value, float &feeder_pot_value, float fiber_diameter, int &dig_pot) {
 
   float new_winder_speed;
   //Task 0: Have the speed estimate
   // "plant"
   float plug_diameter = 25.4; //mm 1 inch plug - should check
-  float target_diameter = setpoint/1000; // convert microns to the mm
+  float target_diameter = setpoint / 1000; // convert microns to the mm
   // feeder speed is already defined with variable feeder_speed - may not be defined in here though . defined in mm/min for now it should be estimated that the feeder speed is constant.
-  float target_winder_speed = feeder_speed * sq(plug_diameter) / sq(target_diameter) / 1000; // this will output the in m/min ~ 2.5 m/min
+  float target_winder_speed = feeder_speed * sq(plug_diameter) / sq(target_diameter) / 1000; // m/min
 
   //convert the winder_pot_value back to mm/min
   /*
-   * This likely is not needed and could be deleted.
-  winder_pot_value *= 0.2237; // Analog voltage reading to linear winding speed conversion = 0.2237mm/(s*Volt)
-  winder_pot_value *= 60; // converts mm/s to mm/min
-  winder_pot_value /= 1000; // converts mm/min to m/min
+     This likely is not needed and could be deleted.
+    winder_pot_value *= 0.2237; // Analog voltage reading to linear winding speed conversion = 0.2237mm/(s*Volt)
+    winder_pot_value *= 60; // converts mm/s to mm/min
+    winder_pot_value /= 1000; // converts mm/min to m/min
   */
-  
+
   // TASK 1: Update winder speed
   // Check if we aree using controls
   if (control_winder == true) {
     error = (fiber_diameter - setpoint) / (setpoint); // is there a diffeerent error metric to go for?
     float prop_gain = abs(error * kp_gain);
 
-    // future add integral values where integral wind up is accounted for 
+    // future add integral values where integral wind up is accounted for
     float ki_winder = 0;
     float int_gain = 0;
 
@@ -322,104 +328,111 @@ void control_function(bool control_winder, bool control_feeder, float &winder_po
     float der_gain = 0;
 
     // total gain
-    float tot_gain = (prop_gain + int_gain + der_gain)*target_winder_speed;
+    float tot_gain = (prop_gain + int_gain + der_gain) * target_winder_speed;
 
     // check if the error which checks if it is to big or to small.
-    /* Old code that is being kept out for now
-    if (error > 0) {
-      float new_winder_speed = winder_pot_value + tot_gain; // increase the speed to decrease the diameter
-      Serial.print(" Speed Increased by: "); Serial.print(tot_gain); 
-      
-      }
-      else {
-        float new_winder_speed = winder_pot_value - tot_gain; // decrease the speed to increase the diameter
-      Serial.print(" Speed Decreased by: "); Serial.print(tot_gain); 
-    }
-    */
+    float new_winder_speed = winder_pot_value;  // Initialize with a valid value
 
-    //check if the winder the winder is at max or min speed.
-    /*
-    if (new_winder_speed > max_winder_speed) {
-      new_winder_speed = max_winder_speed;
-      }
-    if (new_winder_speed < min_winder_speed) {
+    if (error > 0) {
+      new_winder_speed += tot_gain;  // Increase the speed
+      Serial.print("Speed Increased by: "); Serial.print(tot_gain);
+      Serial.print(" New Aimed for Winder Speed: "); Serial.println(new_winder_speed);
+    }
+    else if (error < 0) {
+      new_winder_speed -= tot_gain;  // Decrease the speed
+      Serial.print("Speed Decreased by: "); Serial.print(tot_gain);
+      Serial.print(" New Aimed for Winder Speed: "); Serial.println(new_winder_speed);
+    }
+
+    //check if the winder is at max or min speed.
+    if (new_winder_speed >  max_winder_speed / 1000.0) {
+      new_winder_speed = max_winder_speed / 1000.0;
+      Serial.println("\n Max Speed reached!!! \n");
+    }
+    else if (new_winder_speed < min_winder_speed) {
       new_winder_speed = min_winder_speed;
-      }
-     */
-    
+    }
+
     //convert_winder_to_voltage(new_winder_speed);
     //convert back to winder_pot_value so that it writes it back
-    //winder_pot_value = new_winder_speed;
 
-    int dig_pot = 28; // only here if it needs to be defined again
-    if (error > 0) {
+    winder_pot_value = new_winder_speed;
+
+    /*
+      if (error > 0) {
       dig_pot += 1;
       }
-   
-    if (error < 0){
+
+      if (error < 0){
       dig_pot -= 1;
       }
+      Serial.print(" This is the digial feed: " ); Serial.print(dig_pot);
+    */
 
-  
     //Writing to Digi pot
     // formula to control with
-    //int dig_pot = (winder_pot_value * 1000 / max_winder_speed *127);
+    dig_pot = (winder_pot_value * 1000 / max_winder_speed * 127);
+    float winder_speed = dig_pot/127.0*max_winder_speed/1000.0;
 
     ds3502.setWiper(dig_pot);
-    Serial.print("DS2502_wiper_setting");
-    //Serial.print(winder_pot_value);
-    //Serial.println(" mm/min");
-    //Serial.print(dig_pot);
+    Serial.print("DS2502_wiper_setting: ");
+    Serial.print(winder_speed);
+    Serial.print(" m/min, dig_pot value: ");
+    Serial.print(dig_pot);
+
 
 
     // print new speed, error, speed increase or decrease (above), setpoint
-    //Serial.print(" New winder speed: "); Serial.print(new_winder_speed); 
-    Serial.print(" Current Error: "); Serial.print(error); 
-    Serial.print(" Diameter Aimed for: "); Serial.print(setpoint); 
+    //Serial.print(" New winder speed: "); Serial.print(new_winder_speed);
+    Serial.print("\nCurrent Error: "); Serial.print(error);
+    Serial.print(" Diameter Aimed for: "); Serial.print(setpoint);
+    Serial.print("\n");
   }
-    else {
-      float winder_pot_value = analogRead(winder_pot_value_pin); // Might be computationally better not to initialize this every loop but idk
-      winder_pot_value *= 0.2237; // Analog voltage reading to linear winding speed conversion = 0.2237mm/(s*Volt)
-      winder_pot_value *= 60; // converts mm/s to mm/min
-      winder_pot_value /= 1000; // converts mm/min to m/min
+  else {
+    float winder_pot_value = analogRead(winder_pot_value_pin); // Might be computationally better not to initialize this every loop but idk
+    winder_pot_value *= 0.2237; // Analog voltage reading to linear winding speed conversion = 0.2237mm/(s*Volt)
+    winder_pot_value *= 60; // converts mm/s to mm/min
+    winder_pot_value /= 1000; // converts mm/min to m/min
   }
 
   // could be useful to translate this to a different function
-//------------------------------------------------------------------------------------------------------------------------------------------------------------------------- 
+  //-------------------------------------------------------------------------------------------------------------------------------------------------------------------------
   //Make a seperate function eventually
   // TASK 2: Update feed speed
   // if we want to control the feeder speed
   float new_feeder_speed;
   if (control_feeder = true) {
-    error = (fiber_diameter - setpoint) / ((fiber_diameter + setpoint) / 2); // is there a diffeerent error metric to go for?
+    // error = (fiber_diameter - setpoint) / ((fiber_diameter + setpoint) / 2); // is there a diffeerent error metric to go for?
 
     //may need too adjust the feeder_speed variable
 
-    
+
     //proportional gain
-    float gain = abs(error * kp_gain_feeder);
+    // float gain = abs(error * kp_gain_feeder);
 
     //integral gain
 
 
     //derivative gain
 
-    
+
     //increase or decrease speed
-    if (error > 0) {
+    /*
+      if (error > 0) {
       new_feeder_speed = feeder_pot_value + gain; // increase the speed to decrease the diameter
       Serial.print(gain); Serial.print("Speed Increased by");
-    }
+      }
       else {
         new_feeder_speed = feeder_pot_value - gain; // decrease the speed to increase the diameter
         Serial.print(gain); Serial.print("Speed Decreased by");
-    }
-  // add mins and maxes
-  
+      }
+    */
+    // add mins and maxes
+
 
   }
-    else {
-      float feeder_pot_value = analogRead(feeder_speed_pot);
+  else {
+    float feeder_pot_value = analogRead(feeder_speed_pot);
     feeder_pot_value /= 1023;
     feeder_pot_value *= 100;
     float feeder_speed = feeder_pot_value * 5.08 / 3200 * 60; //conversion from potentiometer reading to feed speed in mm/min.  (feed speed) x (mm/rev) / (steps/rev) x (60 s/min)
