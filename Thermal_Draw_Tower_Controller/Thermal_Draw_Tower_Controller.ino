@@ -154,7 +154,7 @@ void setup() {
   // Initialize the winder
   //convert_winder_to_voltage(winder_pot_value);
   //Writing to Digi pot
-  int winder_dig = (winder_pot_value/max_winder_speed*127*1000); // (m/min)/(mm/min) *1000 mm/min * 127 round to an integer if winder_pot_value  == 3 then this is 28 for the value
+  int winder_dig = (winder_pot_value/max_winder_speed*127*1000); // (m/min)/(mm/min) *1000 mm/m * 127 round to an integer if winder_pot_value  == 3 then this is 28 for the value
   ds3502.setWiper(winder_dig);
   Serial.print("DS2502_wiper_setting");
   Serial.print(winder_pot_value);
@@ -338,16 +338,18 @@ void control_function(bool control_winder, bool control_feeder, float &winder_po
     */
 
     //check if the winder the winder is at max or min speed.
+    /*
     if (new_winder_speed > max_winder_speed) {
       new_winder_speed = max_winder_speed;
       }
     if (new_winder_speed < min_winder_speed) {
       new_winder_speed = min_winder_speed;
       }
+     */
     
     //convert_winder_to_voltage(new_winder_speed);
     //convert back to winder_pot_value so that it writes it back
-    winder_pot_value = new_winder_speed;
+    //winder_pot_value = new_winder_speed;
 
     int dig_pot = 28; // only here if it needs to be defined again
     if (error > 0) {
@@ -371,7 +373,7 @@ void control_function(bool control_winder, bool control_feeder, float &winder_po
 
 
     // print new speed, error, speed increase or decrease (above), setpoint
-    Serial.print(" New winder speed: "); Serial.print(new_winder_speed); 
+    //Serial.print(" New winder speed: "); Serial.print(new_winder_speed); 
     Serial.print(" Current Error: "); Serial.print(error); 
     Serial.print(" Diameter Aimed for: "); Serial.print(setpoint); 
   }
