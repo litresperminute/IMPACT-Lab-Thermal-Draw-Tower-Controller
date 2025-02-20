@@ -69,12 +69,12 @@ const long interval = 200; //interval at which to refresh feed and winder speeds
 //-------------------------------------------------------------------------------------------------------------------------------------------------------------------------
 // defining controls for the winder
 bool control_winder = true;
-int setpoint = 1770; // diameter micrometer set point in microns
+int setpoint = 400; // diameter micrometer set point in microns
 float error = 0; // initialize error
 float fiber_diameter = 0; // starting value
 
 // Inital Values
-float kp_gain = 2; // proporitonal control gain
+float kp_gain = 0.5; // proporitonal control gain
 float winder_pot_value = 3; // m/min This is the value to initialize the tower. Need to get this started.
 
 //function for quick conversion
@@ -156,12 +156,12 @@ void setup() {
   //convert_winder_to_voltage(winder_pot_value);
   //Writing to Digi pot
   int winder_dig = (winder_pot_value / max_winder_speed * 127 * 1000); // (m/min)/(mm/min) *1000 mm/m * 127 round to an integer if winder_pot_value  == 3 then this is 28 for the value
-  float winder_speed = winder_dig / 127.0 * max_winder_speed/1000.0;
+  float winder_speed = winder_dig / 127.0 * max_winder_speed / 1000.0;
   ds3502.setWiper(winder_dig);
   Serial.print(" DS2502_wiper_setting ");
   Serial.print(winder_speed);
   Serial.println(" m/min");
-  delay(10000);
+  //delay(2000);
   //-------------------------------------------------------------------------------------------------------------------------------------------------------------------------
 }
 
@@ -191,6 +191,11 @@ void loop() {
       // this starts the control aspect
       control_function(control_winder, control_feeder, winder_pot_value, feeder_speed, fiber_diameter, dig_pot); //units of the winder_pot_value going in is in volts needs to be converted
 
+      float feeder_pot_value = analogRead(feeder_speed_pot);
+      feeder_pot_value /= 1023;
+      feeder_pot_value *= 100;
+      float feeder_speed = feeder_pot_value * 5.08 / 3200 * 60; //conversion from potentiometer reading to feed speed in mm/min.  (feed speed) x (mm/rev) / (steps/rev) x (60 s/min)
+      feeder.setSpeed(feeder_pot_value);
 
       // TASK 5: Output readings to serial monitor and display
 
@@ -300,10 +305,10 @@ void control_function(bool control_winder, bool control_feeder, float &winder_po
   float new_winder_speed;
   //Task 0: Have the speed estimate
   // "plant"
-  float plug_diameter = 25.4; //mm 1 inch plug - should check
-  float target_diameter = setpoint / 1000; // convert microns to the mm
+  float plug_diameter = 25.4*3.0/4.0; //mm 1 inch plug - should check
+  float target_diameter = setpoint / 1000.0; // convert microns to the mm
   // feeder speed is already defined with variable feeder_speed - may not be defined in here though . defined in mm/min for now it should be estimated that the feeder speed is constant.
-  float target_winder_speed = feeder_speed * sq(plug_diameter) / sq(target_diameter) / 1000; // m/min
+  float target_winder_speed = 3.0 * sq(plug_diameter) / sq(target_diameter) / 1000.0; // m/min
 
   //convert the winder_pot_value back to mm/min
   /*
@@ -371,8 +376,14 @@ void control_function(bool control_winder, bool control_feeder, float &winder_po
 
     //Writing to Digi pot
     // formula to control with
-    dig_pot = (winder_pot_value * 1000 / max_winder_speed * 127);
-    float winder_speed = dig_pot/127.0*max_winder_speed/1000.0;
+    dig_pot = (int)(winder_pot_value * 1000.0 / max_winder_speed * 127.0);
+    
+    if (winder_pot_value == min_winder_speed) {
+      dig_pot = 10;
+    }
+    float winder_speed = dig_pot / 127.0 * max_winder_speed / 1000.0;
+    winder_pot_value = winder_speed;
+
 
     ds3502.setWiper(dig_pot);
     Serial.print("DS2502_wiper_setting: ");
@@ -431,7 +442,7 @@ void control_function(bool control_winder, bool control_feeder, float &winder_po
 
 
   }
-  else {
+  else if (control_feeder == false) {
     float feeder_pot_value = analogRead(feeder_speed_pot);
     feeder_pot_value /= 1023;
     feeder_pot_value *= 100;
