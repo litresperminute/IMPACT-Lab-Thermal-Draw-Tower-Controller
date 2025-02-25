@@ -74,9 +74,9 @@ float error = 0; // initialize error
 float fiber_diameter = 0; // starting value
 
 // Inital Values
-float kp_gain = 0.75; // proporitonal control gain
+float kp_gain = 0.01; // proporitonal control gain
 float kd_winder = 0; // derivative gain
-float ki_winder = 0.1; // integral gain
+float ki_winder = 0.001; // integral gain
 float integral_gain = 0; // initalize this too 0
 float winder_pot_value = 3; // m/min This is the value to initialize the tower. Need to get this started.
 
@@ -307,7 +307,7 @@ void control_function(bool control_winder,  float &winder_pot_value, float fiber
     float prop_gain = error * kp_gain;
 
     // future add integral values where integral wind up is accounted for
-    float control_range = 0.075;
+    float control_range = 0.10;
 
     // anti integral wind - up 
     // is this in the controllable range? ------------------ website says to include the interval but i don't know if we should.
@@ -319,7 +319,7 @@ void control_function(bool control_winder,  float &winder_pot_value, float fiber
     float der_gain = 0;
 
     // total gain ------------------------------------------------------------// Look at this!!!!! What is the best way?
-    float tot_gain = (prop_gain + int_gain + der_gain) * target_winder_speed; // this might need to change? Make it a percentage that muiltplies by our ideal speed? it might be a better way to control.
+    float tot_gain = (1.0 + prop_gain + int_gain + der_gain) * target_winder_speed; // this might need to change? Make it a percentage that muiltplies by our ideal speed? it might be a better way to control.
 
     // check if the error which checks if it is to big or to small.
     float new_winder_speed = tot_gain;  // Initialize with a valid value
