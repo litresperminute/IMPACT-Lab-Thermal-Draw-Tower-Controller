@@ -74,9 +74,9 @@ float error = 0; // initialize error
 float fiber_diameter = 0; // starting value
 
 // Inital Values
-float kp_gain = 0.5; // proporitonal control gain
+float kp_gain = 0.75; // proporitonal control gain
 float kd_winder = 0; // derivative gain
-float ki_winder = 5; // integral gain
+float ki_winder = 0.1; // integral gain
 float integral_gain = 0; // initalize this too 0
 float winder_pot_value = 3; // m/min This is the value to initialize the tower. Need to get this started.
 
@@ -298,20 +298,20 @@ void control_function(bool control_winder,  float &winder_pot_value, float fiber
   float plug_diameter = 25.4*3.0/4.0; //mm 1 inch plug - should check
   float target_diameter = setpoint / 1000.0; // convert microns to the mm
   // feeder speed is already defined with variable feeder_speed - may not be defined in here though . defined in mm/min for now it should be estimated that the feeder speed is constant.
-  float target_winder_speed = 3.0 * sq(plug_diameter) / sq(target_diameter) / 1000.0; // m/min this is with a 3 mm/min feedspeed
+  float target_winder_speed = 2.0 * sq(plug_diameter) / sq(target_diameter) / 1000.0; // m/min this is with a 3 mm/min feedspeed
 
   // TASK 1: Update winder speed
   // Check if we aree using controls
   if (control_winder == true) {
     error = (fiber_diameter - setpoint) / (setpoint); // is there a diffeerent error metric to go for?
-    float prop_gain = abs(error * kp_gain);
+    float prop_gain = error * kp_gain;
 
     // future add integral values where integral wind up is accounted for
-    int control_range = 0.15;
+    float control_range = 0.075;
 
     // anti integral wind - up 
     // is this in the controllable range? ------------------ website says to include the interval but i don't know if we should.
-    if (-control_range < error < control_range) {
+    if (error > -control_range && error < control_range){
       int_gain += ki_winder * error; // start making this grow
     }
     
@@ -322,8 +322,8 @@ void control_function(bool control_winder,  float &winder_pot_value, float fiber
     float tot_gain = (prop_gain + int_gain + der_gain) * target_winder_speed; // this might need to change? Make it a percentage that muiltplies by our ideal speed? it might be a better way to control.
 
     // check if the error which checks if it is to big or to small.
-    float new_winder_speed = winder_pot_value;  // Initialize with a valid value
-
+    float new_winder_speed = tot_gain;  // Initialize with a valid value
+    /*
     if (error > 0) {
       new_winder_speed += tot_gain;  // Increase the speed
       Serial.print("Speed Increased by: "); Serial.print(tot_gain);
@@ -334,7 +334,7 @@ void control_function(bool control_winder,  float &winder_pot_value, float fiber
       Serial.print("Speed Decreased by: "); Serial.print(tot_gain);
       Serial.print(" New Aimed for Winder Speed: "); Serial.println(new_winder_speed);
     }
-
+    */
     //check if the winder is at max or min speed.
     if (new_winder_speed >  max_winder_speed / 1000.0) {
       new_winder_speed = max_winder_speed / 1000.0;
