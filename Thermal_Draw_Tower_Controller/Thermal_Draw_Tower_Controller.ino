@@ -64,6 +64,7 @@ const int stepsPerRev = 3200; // number of steps per revolution of the screw, ba
 unsigned long previousMillis = 0; // stores the last time timer was updated
 const long interval = 200; //interval at which to refresh feed and winder speeds and update display (milliseconds)
 
+
 void setup() {
  
   // Assign pin mode for each limit switch pin, set both switches to GND
@@ -78,7 +79,6 @@ void setup() {
 
   //pinMode(dir_pin, INPUT_PULLUP); // Not sure if  this is necessary
   //digitalWrite(dir_pin, true);  // set the direction pin value to 1 (down)
-
 
   Serial.begin(115200);
   while (!Serial) { delay(1); } // Wait until serial port is opened
@@ -112,7 +112,6 @@ void loop() {
   int neg_limit_check = neg_limit_switch.getState();
 
 
-
   if(pos_limit_check == 0 && neg_limit_check == 0) { // if neither limit switch is triggered (opens on contact) then the program runs as usual.
 
     feeder.runSpeed(); // Runs feed motor. Need to run every iteration (as often as possible)
@@ -142,7 +141,7 @@ void loop() {
       // TASK 3: Read micrometer and tension data
       float tension_Value = analogRead(tension_pin); 
       float fiber_diameter = analogRead(micrometer_pin);
-      fiber_diameter *= 9.77517; // analogRead outputs 1023 bits per 10V, then 2000 microns per V
+      fiber_diameter *= 9.77517; // analogRead outputs 1023 bits per 10V, then 2000 microns per V 
 
       // TASK 5: Output readings to serial monitor and display
       Serial.print(millis()/1000);
@@ -154,8 +153,6 @@ void loop() {
       Serial.print(fiber_diameter);
       Serial.print(",");
       Serial.print(20000*sqrt(feeder_speed/winder_pot_value/1000));
-      Serial.print(",");
-      Serial.println(digipotvalue);
     
       // Display the linear feed speed
       display.clearDisplay();// Clear the buffer
