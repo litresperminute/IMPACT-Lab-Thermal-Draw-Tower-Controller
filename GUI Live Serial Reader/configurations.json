@@ -1,0 +1,139 @@
+[
+    {
+        "configuration_name": "Telemetry",
+        "serial_variables": [
+            {
+                "variable_number": 0,
+                "variable_name": "time",
+                "variable_units": "s",
+                "data_array": []
+            },
+            {
+                "variable_number": 1,
+                "variable_name": "distance",
+                "variable_units": "m",
+                "data_array": []
+            },
+            {
+                "variable_number": 2,
+                "variable_name": "speed",
+                "variable_units": "m/s",
+                "data_array": []
+            },
+            {
+                "variable_number": 3,
+                "variable_name": "acceleration",
+                "variable_units": "",
+                "data_array": []
+            }
+        ],
+        "plots": 0,
+        "baud_rate": 0,
+        "com_port": 0,
+        "csv_file": "No File",
+        "lines": [
+            {
+                "x_serial": {
+                    "variable_number": 0,
+                    "variable_name": "time",
+                    "variable_units": "s",
+                    "data_array": []
+                },
+                "y_serial": {
+                    "variable_number": 1,
+                    "variable_name": "distance",
+                    "variable_units": "m",
+                    "data_array": []
+                },
+                "color": "yellow",
+                "linewidth": 2,
+                "linestyle": "solid",
+                "marker": null,
+                "markersize": null,
+                "markeredgewidth": null,
+                "markeredgecolor": null,
+                "markerfacecolor": null,
+                "markerfacecoloralt": "none",
+                "label": "speed",
+                "gapcolor": null,
+                "fillstyle": null,
+                "antialiased": null,
+                "dash_capstyle": null,
+                "solid_capstyle": null,
+                "dash_joinstyle": null,
+                "solid_joinstyle": null,
+                "pickradius": 5,
+                "drawstyle": null,
+                "markevery": null
+            },
+            {
+                "x_serial": {
+                    "variable_number": 0,
+                    "variable_name": "time",
+                    "variable_units": "s",
+                    "data_array": []
+                },
+                "y_serial": {
+                    "variable_number": 2,
+                    "variable_name": "speed",
+                    "variable_units": "m/s",
+                    "data_array": []
+                },
+                "color": "yellow",
+                "linewidth": 2,
+                "linestyle": "solid",
+                "marker": null,
+                "markersize": null,
+                "markeredgewidth": null,
+                "markeredgecolor": null,
+                "markerfacecolor": null,
+                "markerfacecoloralt": "none",
+                "label": "acceleration",
+                "gapcolor": null,
+                "fillstyle": null,
+                "antialiased": null,
+                "dash_capstyle": null,
+                "solid_capstyle": null,
+                "dash_joinstyle": null,
+                "solid_joinstyle": null,
+                "pickradius": 5,
+                "drawstyle": null,
+                "markevery": null
+            },
+            {
+                "x_serial": {
+                    "variable_number": 0,
+                    "variable_name": "time",
+                    "variable_units": "s",
+                    "data_array": []
+                },
+                "y_serial": {
+                    "variable_number": 3,
+                    "variable_name": "acceleration",
+                    "variable_units": "",
+                    "data_array": []
+                },
+                "color": "b",
+                "linewidth": 2,
+                "linestyle": "solid",
+                "marker": null,
+                "markersize": null,
+                "markeredgewidth": null,
+                "markeredgecolor": null,
+                "markerfacecolor": null,
+                "markerfacecoloralt": "none",
+                "label": "jerk",
+                "gapcolor": null,
+                "fillstyle": null,
+                "antialiased": null,
+                "dash_capstyle": null,
+                "solid_capstyle": null,
+                "dash_joinstyle": null,
+                "solid_joinstyle": null,
+                "pickradius": 5,
+                "drawstyle": null,
+                "markevery": null
+            }
+        ]
+    }
+]
