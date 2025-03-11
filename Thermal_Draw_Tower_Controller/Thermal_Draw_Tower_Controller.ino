@@ -65,18 +65,20 @@ const int stepsPerRev = 3200; // number of steps per revolution of the screw, ba
 unsigned long previousMillis = 0; // stores the last time timer was updated
 const long interval = 200; //interval at which to refresh feed and winder speeds and update display (milliseconds)
 
+#include "RunningAverage.h"
+RunningAverage myRA(50);
 
 //-------------------------------------------------------------------------------------------------------------------------------------------------------------------------
 // defining controls for the winder
 bool control_winder = true;
-int setpoint = 400; // diameter micrometer set point in microns
+int setpoint = 381; // diameter micrometer set point in microns
 float error = 0; // initialize error
 float fiber_diameter = 0; // starting value
 
 // Inital Values
-float kp_gain = 0.01; // proporitonal control gain
+float kp_gain = 0.02; // proporitonal control gain
 float kd_winder = 0; // derivative gain
-float ki_winder = 0.001; // integral gain
+float ki_winder = 0.005; // integral gain
 float integral_gain = 0; // initalize this too 0
 float winder_pot_value = 3; // m/min This is the value to initialize the tower. Need to get this started.
 
@@ -177,9 +179,11 @@ void loop() {
       float tension_Value = analogRead(tension_pin);
       float fiber_diameter = analogRead(micrometer_pin);
       fiber_diameter *= 9.77517; // analogRead outputs 1023 bits per 10V, then 2000 microns per V
+      myRA.addValue(fiber_diameter);
+      float avg_fiber_diameter = myRA.getAverage();
 
       // this starts the control aspect
-      control_function(control_winder, winder_pot_value, fiber_diameter, dig_pot, integral_gain); //units of the winder_pot_value going in is in volts needs to be converted
+      control_function(control_winder, winder_pot_value, avg_fiber_diameter, dig_pot, integral_gain); //units of the winder_pot_value going in is in volts needs to be converted
 
       float feeder_pot_value = analogRead(feeder_speed_pot);
       feeder_pot_value /= 1023;
@@ -197,7 +201,7 @@ void loop() {
       Serial.print(", ");
       Serial.print(fiber_diameter);
       Serial.print(", ");
-      Serial.println(20000 * sqrt(feeder_speed / winder_pot_value / 1000));
+      Serial.println(19050 * sqrt(feeder_speed / winder_pot_value / 1000));
       Serial.println();
 
 
@@ -295,7 +299,7 @@ void control_function(bool control_winder,  float &winder_pot_value, float fiber
   float new_winder_speed;
   //Task 0: Have the speed estimate
   // "plant"
-  float plug_diameter = 25.4*3.0/4.0; //mm 1 inch plug - should check
+  float plug_diameter = 19.05;// 25.4*3.0/4.0; //mm 1 inch plug - should check
   float target_diameter = setpoint / 1000.0; // convert microns to the mm
   // feeder speed is already defined with variable feeder_speed - may not be defined in here though . defined in mm/min for now it should be estimated that the feeder speed is constant.
   float target_winder_speed = 2.0 * sq(plug_diameter) / sq(target_diameter) / 1000.0; // m/min this is with a 3 mm/min feedspeed
@@ -307,7 +311,7 @@ void control_function(bool control_winder,  float &winder_pot_value, float fiber
     float prop_gain = error * kp_gain;
 
     // future add integral values where integral wind up is accounted for
-    float control_range = 0.10;
+    float control_range = 0.6;
 
     // anti integral wind - up 
     // is this in the controllable range? ------------------ website says to include the interval but i don't know if we should.
@@ -359,16 +363,16 @@ void control_function(bool control_winder,  float &winder_pot_value, float fiber
 
     //print the digital potentiometer values
     ds3502.setWiper(dig_pot);
-    Serial.print("DS2502_wiper_setting: ");
-    Serial.print(winder_speed);
-    Serial.print(" m/min, dig_pot value: ");
-    Serial.println(dig_pot);
+    //Serial.print("DS2502_wiper_setting: ");
+    //Serial.print(winder_speed);
+    //Serial.print(" m/min, dig_pot value: ");
+    //Serial.println(dig_pot);
 
-    // print  error, speed increase or decrease (above), setpoint, and the gain values
-    Serial.print("Current Error: "); Serial.println(error);
-    Serial.print("Diameter Aimed for: "); Serial.println(setpoint);
-    Serial.print("Proportional gain: "); Serial.println(prop_gain);
-    Serial.print("Integral gain: "); Serial.println(int_gain);
+    //// print  error, speed increase or decrease (above), setpoint, and the gain values
+    //Serial.print("Current Error: "); Serial.println(error);
+    //Serial.print("Diameter Aimed for: "); Serial.println(setpoint);
+    //Serial.print("Proportional gain: "); Serial.println(prop_gain);
+    //Serial.print("Integral gain: "); Serial.println(int_gain);
   }
   else {
     float winder_pot_value = analogRead(winder_pot_value_pin); // Might be computationally better not to initialize this every loop but idk
