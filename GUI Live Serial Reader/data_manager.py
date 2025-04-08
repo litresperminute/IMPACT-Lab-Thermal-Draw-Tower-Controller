@@ -1,6 +1,6 @@
 from configuration import configuration, configurations
-
 import json
+import os
 
 CONFIG_FILE = "configurations.json"
 
@@ -23,3 +23,8 @@ def save_configurations(configs):
     with open(CONFIG_FILE, "w") as file:
         json.dump([cfg.to_dict() for cfg in configs], file, indent=4)
 
+def find_file(filename, start_dir=os.path.expanduser("~")):
+    for root, _, files, in os.walk(start_dir):
+        if filename in files:
+            return os.path.join(root, filename)
+    return None

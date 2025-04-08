@@ -1,6 +1,6 @@
 import customtkinter as ctk
 from configuration import configuration, configurations
-from configuration_manager import load_configurations
+from data_manager import load_configurations
 
 ctk.set_appearance_mode("System")
 ctk.set_default_color_theme("dark-blue")
@@ -67,7 +67,7 @@ class menuWindow(ctk.CTk):
             parameters = [
                 config.configuration_name,
                 str(len(config.serial_variables)),
-                str(config.plots),
+                str(len(config.plots)),
                 str(config.baud_rate),
                 f"COM{config.com_port}",
                 config.csv_file

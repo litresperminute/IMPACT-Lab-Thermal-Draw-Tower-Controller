@@ -1,6 +1,6 @@
 import customtkinter as ctk
 from configuration import configuration, configurations
-from configuration_manager import save_configurations
+from data_manager import save_configurations
 
 class createConfigurationWindow(ctk.CTk):
     def __init__(self):
@@ -30,10 +30,12 @@ class createConfigurationWindow(ctk.CTk):
 
         for config in configurations:
             if entryText == config.configuration_name:
-                self.openDuplicateConfigWarning(entryText)
+                error_message = "The configuration enetered already exists:\n\n\"{newConfigName}\""
+                error_title = "Duplicate Configuration Names"
+                self.openDuplicateConfigWarning(error_message, error_title, entryText)
         
         if duplicate == False:
-            configuration(entryText, [], 0, 0, 0, "No File")
+            configuration(entryText, [], [], 0, 0, "No File", [])
             save_configurations(configurations)
             self.openConfiguration(entryText)
 
@@ -42,14 +44,14 @@ class createConfigurationWindow(ctk.CTk):
         self.destroy()
 
     def openConfiguration(self, configName):
-        open_configuration_window(configName)
         self.destroy()
+        open_configuration_window(configName)
 
-def open_duplicate_warning_window(newConfigName):
-    from duplicate_warning_window import duplicateWarningWindow
-    warning_win = duplicateWarningWindow(newConfigName)
-    warning_win.mainloop()
-
+def open_duplicate_warning_window(error_message, error_title, newConfigName):
+    from warning_window import error_window
+    error_win = error_window(error_message, error_title, newConfigName=newConfigName)
+    error_win.mainloop()
+    
 def open_configuration_window(configName):
     from configuration_window import configurationWindow
     config_win = configurationWindow(configName)

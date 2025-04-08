@@ -1,26 +1,221 @@
 [
     {
-        "configuration_name": "Thermal Draw",
+        "configuration_name": "Telemetry",
         "serial_variables": [
             {
                 "variable_number": 0,
-                "variable_name": "",
-                "variable_units": ""
+                "variable_name": "time",
+                "variable_units": "s",
+                "data_array": []
             },
             {
-                "variable_number": 0,
-                "variable_name": "",
-                "variable_units": ""
+                "variable_number": 1,
+                "variable_name": "distance",
+                "variable_units": "mm",
+                "data_array": []
             },
             {
-                "variable_number": 0,
-                "variable_name": "",
-                "variable_units": ""
+                "variable_number": 2,
+                "variable_name": "snail distance",
+                "variable_units": "mm",
+                "data_array": []
+            },
+            {
+                "variable_number": 3,
+                "variable_name": "speed",
+                "variable_units": "m/s",
+                "data_array": []
+            },
+            {
+                "variable_number": 4,
+                "variable_name": "acceleration",
+                "variable_units": "m/s^2",
+                "data_array": []
+            },
+            {
+                "variable_number": 5,
+                "variable_name": "secondary snail distance",
+                "variable_units": "mm",
+                "data_array": []
             }
         ],
-        "plots": 0,
+        "plots": [
+            {
+                "lines": [
+                    {
+                        "x_serial": {
+                            "variable_number": 0,
+                            "variable_name": "time",
+                            "variable_units": "s",
+                            "data_array": []
+                        },
+                        "y_serial": {
+                            "variable_number": 1,
+                            "variable_name": "distance",
+                            "variable_units": "mm",
+                            "data_array": []
+                        },
+                        "color": "k",
+                        "linewidth": 2,
+                        "linestyle": "solid",
+                        "marker": null,
+                        "markersize": null,
+                        "markeredgewidth": null,
+                        "markeredgecolor": null,
+                        "markerfacecolor": null,
+                        "markerfacecoloralt": "none",
+                        "label": "speed",
+                        "gapcolor": null,
+                        "fillstyle": null,
+                        "antialiased": null,
+                        "dash_capstyle": null,
+                        "solid_capstyle": null,
+                        "dash_joinstyle": null,
+                        "solid_joinstyle": null,
+                        "pickradius": 5,
+                        "drawstyle": null,
+                        "markevery": null
+                    }
+                ],
+                "title": "speed plot",
+                "x_label": "time (s)",
+                "y_label": "distance (mm)",
+                "legend pos": "upper left",
+                "plot pos": [
+                    0,
+                    0
+                ]
+            },
+            {
+                "lines": [],
+                "title": "acceleration",
+                "x_label": "time (s)",
+                "y_label": "speed (m/s)",
+                "legend pos": "upper left",
+                "plot pos": [
+                    1,
+                    0
+                ]
+            },
+            {
+                "lines": [
+                    {
+                        "x_serial": {
+                            "variable_number": 0,
+                            "variable_name": "time",
+                            "variable_units": "s",
+                            "data_array": []
+                        },
+                        "y_serial": {
+                            "variable_number": 4,
+                            "variable_name": "acceleration",
+                            "variable_units": "m/s^2",
+                            "data_array": []
+                        },
+                        "color": "r",
+                        "linewidth": 2,
+                        "linestyle": "solid",
+                        "marker": null,
+                        "markersize": null,
+                        "markeredgewidth": null,
+                        "markeredgecolor": null,
+                        "markerfacecolor": null,
+                        "markerfacecoloralt": "none",
+                        "label": "jerk",
+                        "gapcolor": null,
+                        "fillstyle": null,
+                        "antialiased": null,
+                        "dash_capstyle": null,
+                        "solid_capstyle": null,
+                        "dash_joinstyle": null,
+                        "solid_joinstyle": null,
+                        "pickradius": 5,
+                        "drawstyle": null,
+                        "markevery": null
+                    }
+                ],
+                "title": "jerk",
+                "x_label": "time (s)",
+                "y_label": "acceleration (m/s^2)",
+                "legend pos": "upper left",
+                "plot pos": [
+                    0,
+                    1
+                ]
+            }
+        ],
         "baud_rate": 0,
         "com_port": 0,
-        "csv_file": "No File"
+        "csv_file": "No File",
+        "lines": [
+            {
+                "x_serial": {
+                    "variable_number": 0,
+                    "variable_name": "time",
+                    "variable_units": "s",
+                    "data_array": []
+                },
+                "y_serial": {
+                    "variable_number": 1,
+                    "variable_name": "distance",
+                    "variable_units": "mm",
+                    "data_array": []
+                },
+                "color": "k",
+                "linewidth": 2,
+                "linestyle": "solid",
+                "marker": null,
+                "markersize": null,
+                "markeredgewidth": null,
+                "markeredgecolor": null,
+                "markerfacecolor": null,
+                "markerfacecoloralt": "none",
+                "label": "speed",
+                "gapcolor": null,
+                "fillstyle": null,
+                "antialiased": null,
+                "dash_capstyle": null,
+                "solid_capstyle": null,
+                "dash_joinstyle": null,
+                "solid_joinstyle": null,
+                "pickradius": 5,
+                "drawstyle": null,
+                "markevery": null
+            },
+            {
+                "x_serial": {
+                    "variable_number": 0,
+                    "variable_name": "time",
+                    "variable_units": "s",
+                    "data_array": []
+                },
+                "y_serial": {
+                    "variable_number": 4,
+                    "variable_name": "acceleration",
+                    "variable_units": "m/s^2",
+                    "data_array": []
+                },
+                "color": "r",
+                "linewidth": 2,
+                "linestyle": "solid",
+                "marker": null,
+                "markersize": null,
+                "markeredgewidth": null,
+                "markeredgecolor": null,
+                "markerfacecolor": null,
+                "markerfacecoloralt": "none",
+                "label": "jerk",
+                "gapcolor": null,
+                "fillstyle": null,
+                "antialiased": null,
+                "dash_capstyle": null,
+                "solid_capstyle": null,
+                "dash_joinstyle": null,
+                "solid_joinstyle": null,
+                "pickradius": 5,
+                "drawstyle": null,
+                "markevery": null
+            }
+        ]
     }
 ]

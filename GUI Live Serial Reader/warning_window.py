@@ -1,15 +1,14 @@
 import customtkinter as ctk
 from PIL import Image
-from configuration import configuration, configurations
 
-class duplicateWarningWindow(ctk.CTkToplevel):
-    def __init__(self, newConfigName):
+class error_window(ctk.CTkToplevel):
+    def __init__(self, error_message: str, error_title: str, window_geometry="435x200", **kwargs):
         super().__init__()
-        self.title("Live Serial Reader - Duplicate Configuration Names")
-        self.geometry("435x200")
+        self.title(f"Live Serial Reader - {error_title}")
+        self.geometry(window_geometry)
         self.resizable(False, False)
-
-        self.iconbitmap("Resources/serial_port_icon_blue.ico")
+        self.after(250, lambda: self.iconbitmap("Resources/serial_port_icon_blue.ico"))
+        self.lift()
 
         self.grid_columnconfigure(0, weight=1)
 
@@ -28,11 +27,13 @@ class duplicateWarningWindow(ctk.CTkToplevel):
         self.error_text = ctk.CTkLabel(self.error_frame, text="ERROR!", font=error_font)
         self.error_text.grid(row=0, column=1, padx=5)
 
-        self.error_message = ctk.CTkLabel(self, text=f"The configuration enetered already exists:\n\n\"{newConfigName}\"", font=error_message_font)
+        formatted_message = error_message.format(**kwargs)
+
+        self.error_message = ctk.CTkLabel(self, text=formatted_message, font=error_message_font)
         self.error_message.grid(row=1, column=0, pady=5, padx=10)
 
-        self.button = ctk.CTkButton(self, text="Cancel", command=self.cancelNewConfig)
+        self.button = ctk.CTkButton(self, text="Acknowledge", command=self.acknowledge_error)
         self.button.grid(row=2, column=0, pady=5, padx=20)
 
-    def cancelNewConfig(self):
+    def acknowledge_error(self):
         self.destroy()
