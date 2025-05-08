@@ -164,6 +164,7 @@ void loop() {
   int pos_limit_check = pos_limit_switch.getState(); // check limit switch state using ezButton (de-bounce) library command
   int neg_limit_check = neg_limit_switch.getState();
 
+
   if (pos_limit_check == 0 && neg_limit_check == 0) { // if neither limit switch is triggered (opens on contact) then the program runs as usual.
 
     feeder.runSpeed(); // Runs feed motor. Need to run every iteration (as often as possible)
@@ -202,7 +203,6 @@ void loop() {
       Serial.print(fiber_diameter);
       Serial.print(", ");
       Serial.println(19050 * sqrt(feeder_speed / winder_pot_value / 1000));
-      Serial.println();
 
 
 
