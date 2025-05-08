@@ -1,6 +1,7 @@
 import customtkinter as ctk
 from typing import Literal
 from lines import line
+from file_manager import icon_path
 
 global plots
 plots = []
@@ -63,9 +64,15 @@ class add_plots(ctk.CTkToplevel):
         self.title("Live Serial Reader - Add Plot")
         self.geometry("435x300")
         self.resizable(True, True)
-        self.after(250, lambda: self.iconbitmap("Resources/serial_port_icon_blue.ico"))
+        self.after(250, lambda: self.iconbitmap(icon_path))
         self.grid_columnconfigure(0, weight=1)
         self.lift()
+
+        if not len(config.lines):
+            error_message = "Add lines first in order to create a plot."
+            error_title = "No Lines Exist"
+            line_error(error_message, error_title)
+            self.destroy()
 
         plot_obj = plot([], "", "", "", "", (0,0))
 
@@ -107,13 +114,16 @@ class add_plots(ctk.CTkToplevel):
             self.line_checkboxes.append([var, line_obj])
 
     def add_plot_title(self, plot_obj, config, event=None):
-        plot_title = self.entry1.get()
+        plot_title = self.entry1.get().strip()
         valid_title = True
 
+        if not plot_title:
+            valid_title = False
+
         for plot_var in config.plots:
-            if plot_var.plot_title == plot_title or plot_title == "":
+            if plot_var.plot_title == plot_title:
                 valid_title = False
-        
+
         if valid_title:
             plot_obj.plot_title = plot_title
             self.entry2.focus_set()
@@ -158,8 +168,8 @@ class add_plots(ctk.CTkToplevel):
             plot_error2(error_message, error_title, legend_pos)
 
     def get_selected_lines(self, plot_obj):
-        selected_lines = [self.line_checkboxes[i][1] for i, var in enumerate(self.line_checkboxes) if var[0].get()]
         valid_lines = True
+        selected_lines = [self.line_checkboxes[i][1] for i, var in enumerate(self.line_checkboxes) if var[0].get()]
         x_unit = ""
         y_unit = ""
         for line_obj in selected_lines:
@@ -180,7 +190,7 @@ class add_plots(ctk.CTkToplevel):
     def add_plot_position(self, plot_obj, config, event=None):
         plot_pos = self.entry5.get().strip()
         valid_pos = True
-        if plot_pos[0] == '(' and plot_pos[-1] == ')':
+        if plot_pos and plot_pos[0] == '(' and plot_pos[-1] == ')':
             plot_pos = [num.strip() for num in plot_pos[1:-1].split(",")]
         else:
             valid_pos = False
@@ -231,7 +241,7 @@ class edit_plots_list(ctk.CTkToplevel):
         self.title("Live Serial Reader - Plots")
         self.geometry("435x200")
         self.resizable(False, False)
-        self.after(250, lambda: self.iconbitmap("Resources/serial_port_icon_blue.ico"))
+        self.after(250, lambda: self.iconbitmap(icon_path))
         self.grid_columnconfigure(0, weight=1)
         self.grid_rowconfigure(2, weight=1)
         self.lift()
@@ -290,9 +300,15 @@ class edit_plot(ctk.CTkToplevel):
         self.title("Live Serial Reader - Edit Plot")
         self.geometry("435x300")
         self.resizable(False, False)
-        self.after(250, lambda: self.iconbitmap("Resources/serial_port_icon_blue.ico"))
+        self.after(250, lambda: self.iconbitmap(icon_path))
         self.grid_columnconfigure(0, weight=1)
         self.lift()
+
+        if not len(config.lines):
+            error_message = "Add lines first in order to edit plots."
+            error_title = "No Lines Exist"
+            line_error(error_message, error_title)
+            self.destroy()
 
         self.plot_ID = config.plots.index(plot_obj)
         self.plot_x_units = plot_obj.lines[0].x_serial.variable_units
@@ -339,8 +355,12 @@ class edit_plot(ctk.CTkToplevel):
             self.line_checkboxes.append([var, line_obj])
 
     def edit_plot_title(self, plot_obj, config, event=None):
-        plot_title = self.entry1.get()
+        plot_title = self.entry1.get().strip()
         valid_title = True
+
+        if not plot_title:
+            valid_title = False
+
         for plot_var in config.plots:
             if plot_var.plot_title == plot_title or plot_title == "":
                 valid_title = False
@@ -412,7 +432,7 @@ class edit_plot(ctk.CTkToplevel):
         plot_pos = self.entry5.get().strip()
         valid_pos = True
 
-        if plot_pos[0] == '(' and plot_pos[-1] == ')':
+        if plot_pos and plot_pos[0] == '(' and plot_pos[-1] == ')':
             plot_pos = [num.strip() for num in plot_pos[1:-1].split(",")]
         else:
             valid_pos = False
@@ -476,6 +496,11 @@ def plot_error4(error_message, error_title, axis):
     error_win = error_window(error_message, error_title, axis=axis)
     error_win.mainloop()
 
+def line_error(error_message, error_title):
+    from warning_window import error_window
+    error_win = error_window(error_message, error_title)
+    error_win.mainloop()
+
 def is_square(x):
     if x >= 0:
         sr = int(x ** 0.5)
@@ -488,7 +513,7 @@ class delete_plot_list(ctk.CTkToplevel):
         self.title("Live Serial Reader - Delete Plots")
         self.geometry("435x200")
         self.resizable(False, False)
-        self.after(250, lambda: self.iconbitmap("Resources/serial_port_icon_blue.ico"))
+        self.after(250, lambda: self.iconbitmap(self.iconbitmap(icon_path)))
         self.grid_columnconfigure(0, weight=1)
         self.grid_rowconfigure(2, weight=1)
 

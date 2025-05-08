@@ -1,6 +1,7 @@
 import customtkinter as ctk
 from configuration import configuration, configurations
 from data_manager import save_configurations
+from file_manager import icon_path
 
 class createConfigurationWindow(ctk.CTk):
     def __init__(self):
@@ -9,7 +10,7 @@ class createConfigurationWindow(ctk.CTk):
         self.geometry("450x150")
         self.resizable(False, False)
 
-        self.iconbitmap("Resources/serial_port_icon_blue.ico")
+        self.iconbitmap(icon_path)
 
         self.grid_columnconfigure(0, weight=1)
 

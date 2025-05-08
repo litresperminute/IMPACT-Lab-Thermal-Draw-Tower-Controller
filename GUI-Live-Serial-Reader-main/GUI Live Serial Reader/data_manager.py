@@ -1,8 +1,7 @@
 from configuration import configuration, configurations
+from file_manager import CONFIG_FILE
 import json
 import os
-
-CONFIG_FILE = "configurations.json"
 
 def load_configurations():
     """ Load configuration objects from JSON file """

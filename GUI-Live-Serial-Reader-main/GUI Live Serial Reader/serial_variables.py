@@ -1,4 +1,5 @@
 import customtkinter as ctk
+from file_manager import icon_path
 
 class serial_variable:
     def __init__(self, variable_number: int, variable_name: str, variable_units: str, data_array: list):
@@ -38,7 +39,7 @@ class add_serial_variable(ctk.CTkToplevel):
         self.title("Live Serial Reader - Add Serial Variable")
         self.geometry("435x200")
         self.resizable(False, False)
-        self.after(250, lambda: self.iconbitmap("Resources/serial_port_icon_blue.ico"))
+        self.after(250, lambda: self.iconbitmap(icon_path))
         self.grid_columnconfigure(0, weight=1)
         self.lift()
 
@@ -67,7 +68,7 @@ class add_serial_variable(ctk.CTkToplevel):
         self.button2.grid(row=4, column=0)
     
     def add_variable_number(self, serial_var, config, event=None):
-        number = self.entry1.get()
+        number = self.entry1.get().strip()
         valid_number = True
 
         for serial in config.serial_variables:
@@ -83,9 +84,12 @@ class add_serial_variable(ctk.CTkToplevel):
             serial_error1(error_message, error_title, number)
 
     def add_variable_name(self, serial_var, config, event=None):
-        name = self.entry2.get()
+        name = self.entry2.get().strip()
         valid_name = True
         
+        if not name:
+            valid_name = False
+
         for serial in config.serial_variables:
             if name == serial.variable_name:
                 valid_name = False
@@ -99,9 +103,14 @@ class add_serial_variable(ctk.CTkToplevel):
             serial_error2(error_message, error_title, name)
 
     def add_variable_units(self, serial_var, event=None):
-        units = self.entry3.get()
-        serial_var.variable_units = units
-
+        units = self.entry3.get().strip()
+        if not units:
+            error_message = "No units have been entered."
+            error_title = "No Units"
+            unit_error(error_message, error_title)
+        else:
+            serial_var.variable_units = units
+        
     def add_serial_variable_to_config(self, serial_var, config, event=None):
         config.serial_variables.append(serial_var)
         self.destroy()
@@ -125,7 +134,7 @@ class edit_serial_variables_list(ctk.CTkToplevel):
         self.title("Live Serial Reader - Serial Variables")
         self.geometry("435x200")
         self.resizable(False, False)
-        self.after(250, lambda: self.iconbitmap("Resources/serial_port_icon_blue.ico"))
+        self.after(250, lambda: self.iconbitmap(icon_path))
         self.grid_columnconfigure(0, weight=1)
         self.grid_rowconfigure(2, weight=1)
 
@@ -183,7 +192,7 @@ class edit_serial_variables(ctk.CTkToplevel):
         self.title("Live Serial Reader - Edit Serial Variable")
         self.geometry("435x200")
         self.resizable(False, False)
-        self.after(250, lambda: self.iconbitmap("Resources/serial_port_icon_blue.ico"))
+        self.after(250, lambda: self.iconbitmap(icon_path))
         self.grid_columnconfigure(0, weight=1)
         self.lift()
 
@@ -212,14 +221,18 @@ class edit_serial_variables(ctk.CTkToplevel):
         self.button2.grid(row=4, column=0)
 
     def edit_variable_number(self, serial_var, config, event=None):
-        number = self.entry1.get()
+        number = self.entry1.get().strip()
         valid_number = True
 
-        for serial in config.serial_variables:
-            if number == str(serial.variable_number):
-                valid_number = False
+        # for serial in config.serial_variables:
+        #     if number == str(serial.variable_number):
+        #         valid_number = False
 
         if valid_number and number.isnumeric() == True and "-" not in number and "." not in number:
+
+            for serial in config.serial_variables:
+                if number == str(serial.variable_number):
+                    serial.variable_number = serial_var.variable_number
 
             for line_obj in config.lines:
                 for plot_obj in config.plots:
@@ -246,14 +259,14 @@ class edit_serial_variables(ctk.CTkToplevel):
             serial_error1(error_message, error_title, number)
 
     def edit_variable_name(self, serial_var, config, event=None):
-        name = self.entry2.get()
+        name = self.entry2.get().strip()
         valid_name = True
         
         for serial in config.serial_variables:
             if name == serial.variable_name:
                 valid_name = False
 
-        if serial_var.variable_name == '':
+        if not serial_var.variable_name:
             valid_name = False
 
         if valid_name:
@@ -283,9 +296,9 @@ class edit_serial_variables(ctk.CTkToplevel):
             serial_error2(error_message, error_title, name)
 
     def edit_variable_units(self, serial_var, config, event=None):
-        units = self.entry3.get()
+        units = self.entry3.get().strip()
         valid_units = True
-        if units == "":
+        if not units:
             valid_units = False
 
         if valid_units:
@@ -326,7 +339,7 @@ class delete_serial_variables(ctk.CTkToplevel):
         self.title("Live Serial Reader - Delete Serial Variables")
         self.geometry("435x200")
         self.resizable(False, False)
-        self.after(250, lambda: self.iconbitmap("Resources/serial_port_icon_blue.ico"))
+        self.after(250, lambda: self.iconbitmap(icon_path))
         self.grid_columnconfigure(0, weight=1)
         self.grid_rowconfigure(2, weight=1)
 
@@ -401,4 +414,9 @@ def serial_error1(error_message, error_title, serial_num):
 def serial_error2(error_message, error_title, serial_name):
     from warning_window import error_window
     error_win = error_window(error_message, error_title, serial_name=serial_name)
+    error_win.mainloop()
+
+def unit_error(error_message, error_title):
+    from warning_window import error_window
+    error_win = error_window(error_message, error_title)
     error_win.mainloop()

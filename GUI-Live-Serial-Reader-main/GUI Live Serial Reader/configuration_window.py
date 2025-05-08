@@ -7,6 +7,7 @@ from configuration import configurations
 from data_manager import save_configurations, find_file
 from create_configuration_window import open_duplicate_warning_window
 from run import run_plots
+from file_manager import icon_path
 import csv
 
 
@@ -27,7 +28,7 @@ class configurationWindow(ctk.CTk):
         self.title(f"Live Serial Reader - {self.name}")
         self.geometry("700x450")
         self.resizable(True, True)
-        self.iconbitmap("Resources/serial_port_icon_blue.ico")
+        self.iconbitmap(icon_path)
 
         # Obtain config
         self.current_config = self.getConfiguration(self.name)
@@ -38,6 +39,9 @@ class configurationWindow(ctk.CTk):
         self.fig_objects = {}
         self.ax_objects = {}
         self.canvas_objects = {}
+
+        self.displayed_plots = []
+        self.plot_widgets = []
 
         # Running bool for live plotting
         self.running = False
@@ -105,15 +109,33 @@ class configurationWindow(ctk.CTk):
 
         self.config(menu=menubar)
         self.update_plots(current_config)
+        self.periodic_check_and_update()
+
+    def periodic_check_and_update(self):
+        for plot_obj in self.current_config.plots:
+            if plot_obj not in self.displayed_plots:
+                for plot_widget in self.plot_widgets:
+                    plot_widget.destroy()
+                self.plot_widgets.clear()
+                self.update_plots(self.current_config)
+
+        for plot_obj in self.displayed_plots:
+            if plot_obj not in self.current_config.plots:
+                for plot_widget in self.plot_widgets:
+                    plot_widget.destroy()
+                self.plot_widgets.clear()
+                self.displayed_plots.clear()
+                self.update_plots(self.current_config)
+
+        self.after(5, self.periodic_check_and_update)
 
     def toggle_live_plotting(self):
-        self.running = not self.running
+        self.running = True
         run_plots(self)
-        while self.running:
-            self.update_plots(self.current_config)
 
     def update_plots(self, config):
         for plot_obj in config.plots:
+            self.displayed_plots.append(plot_obj)
             fig, ax = plt.subplots()
 
             if len(plot_obj.lines) != 0:
@@ -136,6 +158,7 @@ class configurationWindow(ctk.CTk):
             canvas_widget.grid(row=plot_obj.plot_position[0], column=plot_obj.plot_position[1], sticky="nsew")
             self.grid_rowconfigure(plot_obj.plot_position[0], weight=1)
             self.grid_columnconfigure(plot_obj.plot_position[1], weight=1)
+            self.plot_widgets.append(canvas_widget)
 
             if self.running:
                 ax.relim()
@@ -143,10 +166,9 @@ class configurationWindow(ctk.CTk):
                 canvas.draw()
                 canvas.flush_events()
 
-            # self.fig_objects[plot_obj.plot_title] = fig
-            # self.ax_objects[plot_obj.plot_title] = ax
-            # self.canvas_objects[plot_obj.plot_title] = canvas
-
+            self.fig_objects[plot_obj.plot_title] = fig
+            self.ax_objects[plot_obj.plot_title] = ax
+            self.canvas_objects[plot_obj.plot_title] = canvas
 
     # def update_plots(self):
     #     for plot_obj in self.config.plots:

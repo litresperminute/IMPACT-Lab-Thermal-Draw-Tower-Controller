@@ -1,5 +1,6 @@
 import customtkinter as ctk
 from PIL import Image
+from file_manager import icon_path, error_icon_path
 
 class error_window(ctk.CTkToplevel):
     def __init__(self, error_message: str, error_title: str, window_geometry="435x200", **kwargs):
@@ -7,12 +8,12 @@ class error_window(ctk.CTkToplevel):
         self.title(f"Live Serial Reader - {error_title}")
         self.geometry(window_geometry)
         self.resizable(False, False)
-        self.after(250, lambda: self.iconbitmap("Resources/serial_port_icon_blue.ico"))
+        self.after(250, lambda: self.iconbitmap(icon_path))
         self.lift()
 
         self.grid_columnconfigure(0, weight=1)
 
-        error_icon = Image.open('Resources/error_icon.png')
+        error_icon = Image.open(error_icon_path)
         self.error_image = ctk.CTkImage(light_image=error_icon, size=(47, 47))
 
         self.error_frame = ctk.CTkFrame(self, width=100, height=37)

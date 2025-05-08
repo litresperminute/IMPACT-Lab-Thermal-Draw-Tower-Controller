@@ -1,5 +1,6 @@
 import customtkinter as ctk
 from configuration import configuration, configurations
+from file_manager import icon_path
 from data_manager import load_configurations
 
 ctk.set_appearance_mode("System")
@@ -15,7 +16,7 @@ class menuWindow(ctk.CTk):
         global json_data
         json_data = load_configurations()
 
-        self.iconbitmap("Resources/serial_port_icon_blue.ico")
+        self.iconbitmap(icon_path)
 
         # Make sure main window columns expand properly
         self.grid_columnconfigure(0, weight=1)

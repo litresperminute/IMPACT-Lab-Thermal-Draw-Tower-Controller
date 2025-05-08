@@ -5,6 +5,7 @@ import random
 import customtkinter as ctk
 from typing import Literal
 import color_codes
+from file_manager import icon_path
 
 global colors
 colors = ['blue', 'green', 'red', 'cyan', 'magenta', 'yellow', 'black', 'white',
@@ -166,9 +167,15 @@ class add_basic_line(ctk.CTkToplevel):
         self.title("Live Serial Reader - Add Basic Line")
         self.geometry("435x200")
         self.resizable(False, False)
-        self.after(250, lambda: self.iconbitmap("Resources/serial_port_icon_blue.ico"))
+        self.after(250, lambda: self.iconbitmap(icon_path))
         self.grid_columnconfigure(0, weight=1)
         self.lift()
+
+        if not len(config.serial_variables):
+            error_message = "Add serial variables first in order to create a line."
+            error_title = "No Serial Variables Exist"
+            open_serial_warning(error_message, error_title)
+            self.destroy()
 
         x_pass = serial_variable(0, "", "", [])
         y_pass = serial_variable(0, "", "", [])
@@ -220,8 +227,10 @@ class add_basic_line(ctk.CTkToplevel):
             line_obj.y_serial = serial_var
 
     def add_label_to_line(self, line_obj, config, event=None):
-        label = self.entry3.get()
+        label = self.entry3.get().strip()
         valid_label = True
+        if not label:
+            valid_label = False
         for char in label:
             if char == "\\":
                 valid_label = False
@@ -237,7 +246,7 @@ class add_basic_line(ctk.CTkToplevel):
             open_line_label_warning(error_message, error_title, label)
 
     def add_color_to_line(self, line_obj, event=None):
-        color = self.entry4.get().lower()
+        color = self.entry4.get().lower().strip()
         if color in colors:
             line_obj.color = color
         elif color_codes.is_hex_color(color):
@@ -266,7 +275,7 @@ class edit_basic_line_list(ctk.CTkToplevel):
         self.title("Live Serial Reader - Lines")
         self.geometry("435x200")
         self.resizable(False, False)
-        self.after(250, lambda: self.iconbitmap("Resources/serial_port_icon_blue.ico"))
+        self.after(250, lambda: self.iconbitmap(icon_path))
         self.grid_columnconfigure(0, weight=1)
         self.grid_rowconfigure(2, weight=1)
 
@@ -325,9 +334,15 @@ class edit_basic_line(ctk.CTkToplevel):
         self.title(f"Live Serial Reader - Edit Line \"{line_obj.label}\"")
         self.geometry("435x200")
         self.resizable(True, True)
-        self.after(250, lambda: self.iconbitmap("Resources/serial_port_icon_blue.ico"))
+        self.after(250, lambda: self.iconbitmap(icon_path))
         self.grid_columnconfigure(0, weight=1)
         self.lift()
+
+        if not len(config.serial_variables):
+            error_message = "Add serial variables first in order to edit lines."
+            error_title = "No Serial Variables Exist"
+            open_serial_warning(error_message, error_title)
+            self.destroy()
 
         line_ID = config.lines.index(line_obj)
 
@@ -381,8 +396,10 @@ class edit_basic_line(ctk.CTkToplevel):
             line_obj.y_serial = serial_var
 
     def edit_label_to_line(self, line_obj, config, event=None):
-        label = self.entry3.get()
+        label = self.entry3.get().strip()
         valid_label = True
+        if not label:
+            valid_label = False
         for char in label:
             if char == "\\":
                 valid_label = False
@@ -397,7 +414,7 @@ class edit_basic_line(ctk.CTkToplevel):
             open_line_label_warning(error_message, error_title, label)
 
     def edit_color_to_line(self, line_obj, event=None):
-        color = self.entry4.get().lower()
+        color = self.entry4.get().lower().strip()
         if color in colors:
             line_obj.color = color
         elif color_codes.is_hex_color(color):
@@ -438,7 +455,7 @@ class delete_lines(ctk.CTkToplevel):
         self.title("Live Serial Reader - Delete Lines")
         self.geometry("435x200")
         self.resizable(False, False)
-        self.after(250, lambda: self.iconbitmap("Resources/serial_port_icon_blue.ico"))
+        self.after(250, lambda: self.iconbitmap(icon_path))
         self.grid_columnconfigure(0, weight=1)
         self.grid_rowconfigure(2, weight=1)
 
@@ -510,4 +527,9 @@ def open_line_label_warning(error_message, error_title, label):
 def open_line_color_warning(error_message, error_title, color):
     from warning_window import error_window
     error_win = error_window(error_message, error_title, color=color)
+    error_win.mainloop()
+
+def open_serial_warning(error_message, error_title):
+    from warning_window import error_window
+    error_win = error_window(error_message, error_title)
     error_win.mainloop()
