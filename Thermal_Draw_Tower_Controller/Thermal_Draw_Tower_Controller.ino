@@ -154,7 +154,7 @@ void loop() {
       Serial.print(",");
       Serial.print(fiber_diameter);
       Serial.print(",");
-      Serial.print(20000*sqrt(feeder_speed/winder_pot_value/1000));
+      Serial.println(20000*sqrt(feeder_speed/winder_pot_value/1000));
     
       // Display the linear feed speed
       display.clearDisplay();// Clear the buffer
