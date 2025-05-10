@@ -85,9 +85,9 @@ void setup() {
   Serial.begin(115200);
   while (!Serial) { delay(1); } // Wait until serial port is opened
 
-  Serial.println("Adafruit DS3502 Test");
+  //Serial.println("Adafruit DS3502 Test");
   if (!ds3502.begin()) {  Serial.println("Couldn't find DS3502 chip"); /* while (1); */ }
-  Serial.println("Found DS3502 chip");
+  //Serial.println("Found DS3502 chip");
 
   if(!display.begin(SSD1306_SWITCHCAPVCC, SCREEN_ADDRESS)) {  // SSD1306_SWITCHCAPVCC = generate display voltage from 3.3V internally
     Serial.println(F("SSD1306 allocation failed"));
@@ -103,7 +103,8 @@ void setup() {
   feeder_pot_value *= 20;
   float feeder_speed = feeder_pot_value*5.08/stepsPerRev*60; //conversion from potentiometer reading to feed speed in mm/min (5.08 mm per turn, 3200 steps per turn, 60 sec per minute)
   feeder.setSpeed(feeder_pot_value);  
-  Serial.println("time, Feed (mm/min), Wind (m/min), diameter (um), predicted diameter (um)");
+  //Serial.println("Time(s),Feed(mm/min),Wind(m/min),Diameter(um),Predicted_diameter(um)"); //OPTIONAL HEADER
+  delay(500); // this delay allows the mechanical states to stabalize, making errors with the EZbutton debounce states less likely to occur. 
 }
 
 void loop() {  
@@ -146,7 +147,7 @@ void loop() {
       fiber_diameter *= 9.77517; // analogRead outputs 1023 bits per 10V, then 2000 microns per V 
 
       // TASK 5: Output readings to serial monitor and display
-      Serial.print(millis()/1000);
+      Serial.print(millis()/1000.0);
       Serial.print(",");
       Serial.print(feeder_speed);
       Serial.print(",");
