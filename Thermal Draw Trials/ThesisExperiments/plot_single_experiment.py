@@ -5,7 +5,7 @@ import os
 import numpy as np
 
 # === Settings ===
-experiment_id = "CLEAR PETG NO FEEDBACK 160C DR50"
+experiment_id = "PETG 140C DR50"
 log_dir = "experiment_logs"
 fig_dir = "figures"
 os.makedirs(fig_dir, exist_ok=True)
@@ -20,7 +20,7 @@ with open(json_path, "r") as f:
     meta = json.load(f)
 
 # === Plotting ===
-xmin,xmax = [300,600]
+xmin,xmax = [100,600]
 ymin,ymax = [0,1000]
 
 plt.figure(figsize=(6, 4))
