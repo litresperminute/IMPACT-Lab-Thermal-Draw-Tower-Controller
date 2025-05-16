@@ -5,6 +5,7 @@ import os
 import numpy as np
 
 # === Settings ===
+
 experiment_id = input("Experiment ID: ") # CLEAR PETG NO FEEDBACK 160C DR50
 log_dir = "experiment_logs"
 fig_dir = "figures"
@@ -20,6 +21,7 @@ with open(json_path, "r") as f:
     meta = json.load(f)
 
 # === Plotting ===
+
 xmin,xmax = [0,1970]
 ymin,ymax = [0,1000]
 

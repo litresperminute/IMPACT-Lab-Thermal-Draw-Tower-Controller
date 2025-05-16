@@ -1,0 +1,11 @@
+{
+    "experiment_id": "Training",
+    "material": "PETG",
+    "material_color": "Clear",
+    "preform_diameter": 20.0,
+    "temperature_C": 160.0,
+    "drawdown_ratio": 50.0,
+    "operator": "Luka Morita",
+    "start_time": "2025-05-14 11:47:01",
+    "notes": "Training "
+}
