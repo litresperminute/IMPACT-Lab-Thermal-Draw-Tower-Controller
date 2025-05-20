@@ -4,6 +4,17 @@ import json
 import os
 import numpy as np
 
+def prompt_yn(prompt):
+    result = None
+    while type(result) != bool:
+        response = input(f"{prompt} (Y/n) ")
+        if response in ['Y', 'y']:
+            result = True
+        elif response in ['N', 'n']:
+            result = False
+    return result
+
+
 # === Settings ===
 
 experiment_id = input("Experiment ID: ") # CLEAR PETG NO FEEDBACK 160C DR50
@@ -22,8 +33,20 @@ with open(json_path, "r") as f:
 
 # === Plotting ===
 
-xmin,xmax = [0,1970]
-ymin,ymax = [0,1000]
+if prompt_yn("Plot specific time range?"):
+    xrange_input = ''.join(ch for ch in input('Specify time range "<min>,<max>": ') if ch.isdigit() or ch == ',')
+    xmin, xmax = [int(x) for x in xrange_input.split(',')]
+
+else:
+    xmin, xmax = [0, df["Time(s)"].iloc[-1]]
+
+if prompt_yn("Plot specific diameter range?"):
+    yrange_input = ''.join(ch for ch in input('Specify diameter range "<min>,<max>": ') if ch.isdigit() or ch == ',')
+    ymin, ymax = [int(y) for y in yrange_input.split(',')]
+    
+
+else:
+    ymin, ymax = [0, max(df["Diameter(um)"])]
 
 plt.figure(figsize=(6, 4))
 plt.xlim(xmin,xmax)
