@@ -48,11 +48,17 @@ if prompt_yn("Plot specific diameter range?"):
 else:
     ymin, ymax = [0, max(df["Diameter(um)"])]
 
+plot_pred_diam = prompt_yn("Plot calculated predicted diameter?")
+
 plt.figure(figsize=(6, 4))
 plt.xlim(xmin,xmax)
 plt.ylim(ymin,ymax)
 plt.autoscale(enable=False)
 plt.plot(df["Time(s)"], df["Diameter(um)"], label="Measured Diameter", linewidth=1)
+
+if plot_pred_diam:
+    plt.plot(df["Time(s)"], df["Predicted_diameter(um)"], label="Predicted Diameter", linewidth=1, color="green")
+
 plt.axhline(y=400, color='red', linestyle='--', linewidth=1.2, label='Target = 400μm')
 plt.title(f"{meta['material']} ({meta['material_color']})")
 plt.xlabel("Time (s)")
