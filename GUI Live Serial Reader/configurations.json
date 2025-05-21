@@ -1,0 +1,650 @@
+[
+    {
+        "configuration_name": "Thermal Draw Test",
+        "serial_variables": [
+            {
+                "variable_number": 0,
+                "variable_name": "time",
+                "variable_units": "s",
+                "data_array": []
+            },
+            {
+                "variable_number": 1,
+                "variable_name": "draw speed",
+                "variable_units": "mm/min",
+                "data_array": []
+            },
+            {
+                "variable_number": 2,
+                "variable_name": "feed speed",
+                "variable_units": "mm/min",
+                "data_array": []
+            },
+            {
+                "variable_number": 3,
+                "variable_name": "predicted diameter",
+                "variable_units": "mm",
+                "data_array": []
+            },
+            {
+                "variable_number": 4,
+                "variable_name": "actual diameter",
+                "variable_units": "mm",
+                "data_array": []
+            }
+        ],
+        "plots": [
+            {
+                "lines": [
+                    {
+                        "x_serial": {
+                            "variable_number": 0,
+                            "variable_name": "time",
+                            "variable_units": "s",
+                            "data_array": []
+                        },
+                        "y_serial": {
+                            "variable_number": 1,
+                            "variable_name": "draw speed",
+                            "variable_units": "mm/min",
+                            "data_array": []
+                        },
+                        "color": "red",
+                        "linewidth": 2.0,
+                        "linestyle": "-",
+                        "marker": "None",
+                        "markersize": 6.0,
+                        "markeredgewidth": 1.0,
+                        "markeredgecolor": "red",
+                        "markerfacecolor": "yellow",
+                        "markerfacecoloralt": "none",
+                        "label": "draw speed",
+                        "gapcolor": null,
+                        "fillstyle": "full",
+                        "antialiased": false,
+                        "dash_capstyle": "butt",
+                        "solid_capstyle": "butt",
+                        "dash_joinstyle": "round",
+                        "solid_joinstyle": "miter",
+                        "pickradius": 5.0,
+                        "drawstyle": "default",
+                        "markevery": null
+                    },
+                    {
+                        "x_serial": {
+                            "variable_number": 0,
+                            "variable_name": "time",
+                            "variable_units": "s",
+                            "data_array": []
+                        },
+                        "y_serial": {
+                            "variable_number": 2,
+                            "variable_name": "feed speed",
+                            "variable_units": "mm/min",
+                            "data_array": []
+                        },
+                        "color": "blue",
+                        "linewidth": 2.0,
+                        "linestyle": "-",
+                        "marker": "None",
+                        "markersize": 6.0,
+                        "markeredgewidth": 1.0,
+                        "markeredgecolor": "white",
+                        "markerfacecolor": "c",
+                        "markerfacecoloralt": "none",
+                        "label": "feed speed",
+                        "gapcolor": null,
+                        "fillstyle": "full",
+                        "antialiased": false,
+                        "dash_capstyle": "butt",
+                        "solid_capstyle": "butt",
+                        "dash_joinstyle": "round",
+                        "solid_joinstyle": "miter",
+                        "pickradius": 5.0,
+                        "drawstyle": "default",
+                        "markevery": null
+                    }
+                ],
+                "title": "Feed / Draw Speed",
+                "x_label": "time (s)",
+                "y_label": "speed (mm/min)",
+                "legend pos": "upper left",
+                "plot pos": [
+                    0,
+                    0
+                ]
+            },
+            {
+                "lines": [
+                    {
+                        "x_serial": {
+                            "variable_number": 0,
+                            "variable_name": "time",
+                            "variable_units": "s",
+                            "data_array": []
+                        },
+                        "y_serial": {
+                            "variable_number": 3,
+                            "variable_name": "predicted diameter",
+                            "variable_units": "mm",
+                            "data_array": []
+                        },
+                        "color": "green",
+                        "linewidth": 2.0,
+                        "linestyle": "-",
+                        "marker": "None",
+                        "markersize": 6.0,
+                        "markeredgewidth": 1.0,
+                        "markeredgecolor": "r",
+                        "markerfacecolor": "b",
+                        "markerfacecoloralt": "none",
+                        "label": "predicted diameter",
+                        "gapcolor": null,
+                        "fillstyle": "full",
+                        "antialiased": false,
+                        "dash_capstyle": "butt",
+                        "solid_capstyle": "butt",
+                        "dash_joinstyle": "round",
+                        "solid_joinstyle": "miter",
+                        "pickradius": 5.0,
+                        "drawstyle": "default",
+                        "markevery": null
+                    },
+                    {
+                        "x_serial": {
+                            "variable_number": 0,
+                            "variable_name": "time",
+                            "variable_units": "s",
+                            "data_array": []
+                        },
+                        "y_serial": {
+                            "variable_number": 4,
+                            "variable_name": "actual diameter",
+                            "variable_units": "mm",
+                            "data_array": []
+                        },
+                        "color": "magenta",
+                        "linewidth": 2.0,
+                        "linestyle": "-",
+                        "marker": "None",
+                        "markersize": 6.0,
+                        "markeredgewidth": 1.0,
+                        "markeredgecolor": "y",
+                        "markerfacecolor": "y",
+                        "markerfacecoloralt": "none",
+                        "label": "actual diameter",
+                        "gapcolor": null,
+                        "fillstyle": "full",
+                        "antialiased": false,
+                        "dash_capstyle": "butt",
+                        "solid_capstyle": "butt",
+                        "dash_joinstyle": "round",
+                        "solid_joinstyle": "miter",
+                        "pickradius": 5.0,
+                        "drawstyle": "default",
+                        "markevery": null
+                    }
+                ],
+                "title": "Predicted / Actual Diameter",
+                "x_label": "time (s)",
+                "y_label": "diameter (mm)",
+                "legend pos": "upper left",
+                "plot pos": [
+                    1,
+                    0
+                ]
+            }
+        ],
+        "baud_rate": "2400",
+        "com_port": "6",
+        "csv_file": "No File",
+        "lines": [
+            {
+                "x_serial": {
+                    "variable_number": 0,
+                    "variable_name": "time",
+                    "variable_units": "s",
+                    "data_array": []
+                },
+                "y_serial": {
+                    "variable_number": 1,
+                    "variable_name": "draw speed",
+                    "variable_units": "mm/min",
+                    "data_array": []
+                },
+                "color": "red",
+                "linewidth": 2.0,
+                "linestyle": "-",
+                "marker": "None",
+                "markersize": 6.0,
+                "markeredgewidth": 1.0,
+                "markeredgecolor": "red",
+                "markerfacecolor": "yellow",
+                "markerfacecoloralt": "none",
+                "label": "draw speed",
+                "gapcolor": null,
+                "fillstyle": "full",
+                "antialiased": false,
+                "dash_capstyle": "butt",
+                "solid_capstyle": "butt",
+                "dash_joinstyle": "round",
+                "solid_joinstyle": "miter",
+                "pickradius": 5.0,
+                "drawstyle": "default",
+                "markevery": null
+            },
+            {
+                "x_serial": {
+                    "variable_number": 0,
+                    "variable_name": "time",
+                    "variable_units": "s",
+                    "data_array": []
+                },
+                "y_serial": {
+                    "variable_number": 2,
+                    "variable_name": "feed speed",
+                    "variable_units": "mm/min",
+                    "data_array": []
+                },
+                "color": "blue",
+                "linewidth": 2.0,
+                "linestyle": "-",
+                "marker": "None",
+                "markersize": 6.0,
+                "markeredgewidth": 1.0,
+                "markeredgecolor": "white",
+                "markerfacecolor": "c",
+                "markerfacecoloralt": "none",
+                "label": "feed speed",
+                "gapcolor": null,
+                "fillstyle": "full",
+                "antialiased": false,
+                "dash_capstyle": "butt",
+                "solid_capstyle": "butt",
+                "dash_joinstyle": "round",
+                "solid_joinstyle": "miter",
+                "pickradius": 5.0,
+                "drawstyle": "default",
+                "markevery": null
+            },
+            {
+                "x_serial": {
+                    "variable_number": 0,
+                    "variable_name": "time",
+                    "variable_units": "s",
+                    "data_array": []
+                },
+                "y_serial": {
+                    "variable_number": 3,
+                    "variable_name": "predicted diameter",
+                    "variable_units": "mm",
+                    "data_array": []
+                },
+                "color": "green",
+                "linewidth": 2.0,
+                "linestyle": "-",
+                "marker": "None",
+                "markersize": 6.0,
+                "markeredgewidth": 1.0,
+                "markeredgecolor": "r",
+                "markerfacecolor": "b",
+                "markerfacecoloralt": "none",
+                "label": "predicted diameter",
+                "gapcolor": null,
+                "fillstyle": "full",
+                "antialiased": false,
+                "dash_capstyle": "butt",
+                "solid_capstyle": "butt",
+                "dash_joinstyle": "round",
+                "solid_joinstyle": "miter",
+                "pickradius": 5.0,
+                "drawstyle": "default",
+                "markevery": null
+            },
+            {
+                "x_serial": {
+                    "variable_number": 0,
+                    "variable_name": "time",
+                    "variable_units": "s",
+                    "data_array": []
+                },
+                "y_serial": {
+                    "variable_number": 4,
+                    "variable_name": "actual diameter",
+                    "variable_units": "mm",
+                    "data_array": []
+                },
+                "color": "magenta",
+                "linewidth": 2.0,
+                "linestyle": "-",
+                "marker": "None",
+                "markersize": 6.0,
+                "markeredgewidth": 1.0,
+                "markeredgecolor": "y",
+                "markerfacecolor": "y",
+                "markerfacecoloralt": "none",
+                "label": "actual diameter",
+                "gapcolor": null,
+                "fillstyle": "full",
+                "antialiased": false,
+                "dash_capstyle": "butt",
+                "solid_capstyle": "butt",
+                "dash_joinstyle": "round",
+                "solid_joinstyle": "miter",
+                "pickradius": 5.0,
+                "drawstyle": "default",
+                "markevery": null
+            }
+        ]
+    },
+    {
+        "configuration_name": "new config",
+        "serial_variables": [
+            {
+                "variable_number": 0,
+                "variable_name": "time",
+                "variable_units": "s",
+                "data_array": []
+            },
+            {
+                "variable_number": 1,
+                "variable_name": "weed",
+                "variable_units": "grams",
+                "data_array": []
+            },
+            {
+                "variable_number": 2,
+                "variable_name": "alcohol",
+                "variable_units": "mL",
+                "data_array": []
+            },
+            {
+                "variable_number": 3,
+                "variable_name": "mushies",
+                "variable_units": "grams",
+                "data_array": []
+            }
+        ],
+        "plots": [
+            {
+                "lines": [
+                    {
+                        "x_serial": {
+                            "variable_number": 0,
+                            "variable_name": "time",
+                            "variable_units": "s",
+                            "data_array": []
+                        },
+                        "y_serial": {
+                            "variable_number": 1,
+                            "variable_name": "weed",
+                            "variable_units": "grams",
+                            "data_array": []
+                        },
+                        "color": "black",
+                        "linewidth": 2.0,
+                        "linestyle": "-",
+                        "marker": "None",
+                        "markersize": 6.0,
+                        "markeredgewidth": 1.0,
+                        "markeredgecolor": "green",
+                        "markerfacecolor": "c",
+                        "markerfacecoloralt": "none",
+                        "label": "weed line",
+                        "gapcolor": null,
+                        "fillstyle": "full",
+                        "antialiased": false,
+                        "dash_capstyle": "butt",
+                        "solid_capstyle": "butt",
+                        "dash_joinstyle": "round",
+                        "solid_joinstyle": "miter",
+                        "pickradius": 5.0,
+                        "drawstyle": "default",
+                        "markevery": null
+                    },
+                    {
+                        "x_serial": {
+                            "variable_number": 0,
+                            "variable_name": "time",
+                            "variable_units": "s",
+                            "data_array": []
+                        },
+                        "y_serial": {
+                            "variable_number": 3,
+                            "variable_name": "mushies",
+                            "variable_units": "grams",
+                            "data_array": []
+                        },
+                        "color": "k",
+                        "linewidth": 2.0,
+                        "linestyle": "-",
+                        "marker": "None",
+                        "markersize": 6.0,
+                        "markeredgewidth": 1.0,
+                        "markeredgecolor": "m",
+                        "markerfacecolor": "blue",
+                        "markerfacecoloralt": "none",
+                        "label": "magic mushrooms consumed",
+                        "gapcolor": null,
+                        "fillstyle": "full",
+                        "antialiased": false,
+                        "dash_capstyle": "butt",
+                        "solid_capstyle": "butt",
+                        "dash_joinstyle": "round",
+                        "solid_joinstyle": "miter",
+                        "pickradius": 5.0,
+                        "drawstyle": "default",
+                        "markevery": null
+                    }
+                ],
+                "title": "da cannabis ploot",
+                "x_label": "time (s)",
+                "y_label": "weed smoked (g)",
+                "legend pos": "upper left",
+                "plot pos": [
+                    0,
+                    0
+                ]
+            },
+            {
+                "lines": [
+                    {
+                        "x_serial": {
+                            "variable_number": 0,
+                            "variable_name": "time",
+                            "variable_units": "s",
+                            "data_array": []
+                        },
+                        "y_serial": {
+                            "variable_number": 2,
+                            "variable_name": "alcohol",
+                            "variable_units": "mL",
+                            "data_array": []
+                        },
+                        "color": "m",
+                        "linewidth": 2.0,
+                        "linestyle": "-",
+                        "marker": "None",
+                        "markersize": 6.0,
+                        "markeredgewidth": 1.0,
+                        "markeredgecolor": "black",
+                        "markerfacecolor": "white",
+                        "markerfacecoloralt": "none",
+                        "label": "beer line",
+                        "gapcolor": null,
+                        "fillstyle": "full",
+                        "antialiased": false,
+                        "dash_capstyle": "butt",
+                        "solid_capstyle": "butt",
+                        "dash_joinstyle": "round",
+                        "solid_joinstyle": "miter",
+                        "pickradius": 5.0,
+                        "drawstyle": "default",
+                        "markevery": null
+                    }
+                ],
+                "title": "da lager log",
+                "x_label": "time (s)",
+                "y_label": "beer chugged (mL)",
+                "legend pos": "upper left",
+                "plot pos": [
+                    1,
+                    0
+                ]
+            },
+            {
+                "lines": [
+                    {
+                        "x_serial": {
+                            "variable_number": 0,
+                            "variable_name": "time",
+                            "variable_units": "s",
+                            "data_array": []
+                        },
+                        "y_serial": {
+                            "variable_number": 3,
+                            "variable_name": "mushies",
+                            "variable_units": "grams",
+                            "data_array": []
+                        },
+                        "color": "k",
+                        "linewidth": 2.0,
+                        "linestyle": "-",
+                        "marker": "None",
+                        "markersize": 6.0,
+                        "markeredgewidth": 1.0,
+                        "markeredgecolor": "m",
+                        "markerfacecolor": "blue",
+                        "markerfacecoloralt": "none",
+                        "label": "magic mushrooms consumed",
+                        "gapcolor": null,
+                        "fillstyle": "full",
+                        "antialiased": false,
+                        "dash_capstyle": "butt",
+                        "solid_capstyle": "butt",
+                        "dash_joinstyle": "round",
+                        "solid_joinstyle": "miter",
+                        "pickradius": 5.0,
+                        "drawstyle": "default",
+                        "markevery": null
+                    }
+                ],
+                "title": "mushroom plot",
+                "x_label": "time (s)",
+                "y_label": "toadstools (g)",
+                "legend pos": "upper left",
+                "plot pos": [
+                    1,
+                    1
+                ]
+            }
+        ],
+        "baud_rate": "2400",
+        "com_port": "6",
+        "csv_file": "No File",
+        "lines": [
+            {
+                "x_serial": {
+                    "variable_number": 0,
+                    "variable_name": "time",
+                    "variable_units": "s",
+                    "data_array": []
+                },
+                "y_serial": {
+                    "variable_number": 1,
+                    "variable_name": "weed",
+                    "variable_units": "grams",
+                    "data_array": []
+                },
+                "color": "black",
+                "linewidth": 2.0,
+                "linestyle": "-",
+                "marker": "None",
+                "markersize": 6.0,
+                "markeredgewidth": 1.0,
+                "markeredgecolor": "green",
+                "markerfacecolor": "c",
+                "markerfacecoloralt": "none",
+                "label": "weed line",
+                "gapcolor": null,
+                "fillstyle": "full",
+                "antialiased": false,
+                "dash_capstyle": "butt",
+                "solid_capstyle": "butt",
+                "dash_joinstyle": "round",
+                "solid_joinstyle": "miter",
+                "pickradius": 5.0,
+                "drawstyle": "default",
+                "markevery": null
+            },
+            {
+                "x_serial": {
+                    "variable_number": 0,
+                    "variable_name": "time",
+                    "variable_units": "s",
+                    "data_array": []
+                },
+                "y_serial": {
+                    "variable_number": 2,
+                    "variable_name": "alcohol",
+                    "variable_units": "mL",
+                    "data_array": []
+                },
+                "color": "m",
+                "linewidth": 2.0,
+                "linestyle": "-",
+                "marker": "None",
+                "markersize": 6.0,
+                "markeredgewidth": 1.0,
+                "markeredgecolor": "black",
+                "markerfacecolor": "white",
+                "markerfacecoloralt": "none",
+                "label": "beer line",
+                "gapcolor": null,
+                "fillstyle": "full",
+                "antialiased": false,
+                "dash_capstyle": "butt",
+                "solid_capstyle": "butt",
+                "dash_joinstyle": "round",
+                "solid_joinstyle": "miter",
+                "pickradius": 5.0,
+                "drawstyle": "default",
+                "markevery": null
+            },
+            {
+                "x_serial": {
+                    "variable_number": 0,
+                    "variable_name": "time",
+                    "variable_units": "s",
+                    "data_array": []
+                },
+                "y_serial": {
+                    "variable_number": 3,
+                    "variable_name": "mushies",
+                    "variable_units": "grams",
+                    "data_array": []
+                },
+                "color": "k",
+                "linewidth": 2.0,
+                "linestyle": "-",
+                "marker": "None",
+                "markersize": 6.0,
+                "markeredgewidth": 1.0,
+                "markeredgecolor": "m",
+                "markerfacecolor": "blue",
+                "markerfacecoloralt": "none",
+                "label": "magic mushrooms consumed",
+                "gapcolor": null,
+                "fillstyle": "full",
+                "antialiased": false,
+                "dash_capstyle": "butt",
+                "solid_capstyle": "butt",
+                "dash_joinstyle": "round",
+                "solid_joinstyle": "miter",
+                "pickradius": 5.0,
+                "drawstyle": "default",
+                "markevery": null
+            }
+        ]
+    }
+]

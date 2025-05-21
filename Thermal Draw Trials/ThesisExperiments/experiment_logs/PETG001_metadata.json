@@ -1,0 +1,11 @@
+{
+    "experiment_id": "001",
+    "material": "PETG",
+    "material_color": "Clear",
+    "preform_diameter": 20.0,
+    "temperature_C": 160.0,
+    "drawdown_ratio": 50.0,
+    "operator": "Luka",
+    "start_time": "2025-05-16 14:23:42",
+    "notes": "Test run"
+}
