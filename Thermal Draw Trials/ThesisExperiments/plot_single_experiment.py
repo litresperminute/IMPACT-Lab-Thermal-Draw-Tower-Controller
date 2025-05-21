@@ -4,8 +4,21 @@ import json
 import os
 import numpy as np
 
+def prompt_yn(prompt):
+    result = None
+    while type(result) != bool:
+        response = input(f"{prompt} (Y/n) ")
+        if response in ['Y', 'y']:
+            result = True
+        elif response in ['N', 'n']:
+            result = False
+    return result
+
+
 # === Settings ===
-experiment_id = "PETG001"
+
+
+experiment_id = input("Experiment ID: ") # CLEAR PETG NO FEEDBACK 160C DR50
 log_dir = "experiment_logs"
 fig_dir = "figures"
 os.makedirs(fig_dir, exist_ok=True)
@@ -20,14 +33,33 @@ with open(json_path, "r") as f:
     meta = json.load(f)
 
 # === Plotting ===
-xmin,xmax = [0,600]
-ymin,ymax = [0,1000]
+
+if prompt_yn("Plot specific time range?"):
+    xrange_input = ''.join(ch for ch in input('Specify time range "<min>,<max>": ') if ch.isdigit() or ch == ',')
+    xmin, xmax = [int(x) for x in xrange_input.split(',')]
+
+else:
+    xmin, xmax = [0, df["Time(s)"].iloc[-1]]
+
+if prompt_yn("Plot specific diameter range?"):
+    yrange_input = ''.join(ch for ch in input('Specify diameter range "<min>,<max>": ') if ch.isdigit() or ch == ',')
+    ymin, ymax = [int(y) for y in yrange_input.split(',')]
+    
+
+else:
+    ymin, ymax = [0, max(df["Diameter(um)"])]
+
+plot_pred_diam = prompt_yn("Plot calculated predicted diameter?")
 
 plt.figure(figsize=(6, 4))
 plt.xlim(xmin,xmax)
 plt.ylim(ymin,ymax)
 plt.autoscale(enable=False)
 plt.plot(df["Time(s)"], df["Diameter(um)"], label="Measured Diameter", linewidth=1)
+
+if plot_pred_diam:
+    plt.plot(df["Time(s)"], df["Predicted_diameter(um)"], label="Predicted Diameter", linewidth=1, color="green")
+
 plt.axhline(y=400, color='red', linestyle='--', linewidth=1.2, label='Target = 400μm')
 plt.title(f"{meta['material']} ({meta['material_color']})")
 plt.xlabel("Time (s)")

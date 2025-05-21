@@ -1,0 +1,11 @@
+{
+    "experiment_id": "software test",
+    "material": "petg",
+    "material_color": "clear",
+    "preform_diameter": 20.0,
+    "temperature_C": 160.0,
+    "drawdown_ratio": 50.0,
+    "operator": "kevin liu",
+    "start_time": "2025-05-15 11:33:10",
+    "notes": "program test"
+}

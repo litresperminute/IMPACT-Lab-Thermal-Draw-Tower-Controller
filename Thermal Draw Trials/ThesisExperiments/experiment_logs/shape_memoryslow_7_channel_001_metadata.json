@@ -1,0 +1,11 @@
+{
+    "experiment_id": "slow_7_channel_001",
+    "material": "shape_memory",
+    "material_color": "red",
+    "preform_diameter": 20.0,
+    "temperature_C": 160.0,
+    "drawdown_ratio": null,
+    "operator": "Kevin Liu",
+    "start_time": "2025-05-16 15:44:59",
+    "notes": ""
+}
