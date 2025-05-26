@@ -1,0 +1,400 @@
+{
+    "running": true,
+    "trial_num": 0,
+    "new_trial": false,
+    "csv_recording": false,
+    "valid_port": true,
+    "error_triggered": false,
+    "serial_values": [
+        "5",
+        "4",
+        "1",
+        "350",
+        "347"
+    ],
+    "plot_dict": [
+        [
+            {
+                "lines": [
+                    {
+                        "x_serial": {
+                            "variable_number": 0,
+                            "variable_name": "time",
+                            "variable_units": "s",
+                            "data_array": []
+                        },
+                        "y_serial": {
+                            "variable_number": 1,
+                            "variable_name": "pet owners",
+                            "variable_units": "unitless",
+                            "data_array": []
+                        },
+                        "color": "black",
+                        "linewidth": 2.0,
+                        "linestyle": "-",
+                        "marker": "None",
+                        "markersize": 6.0,
+                        "markeredgewidth": 1.0,
+                        "markeredgecolor": "cyan",
+                        "markerfacecolor": "cyan",
+                        "markerfacecoloralt": "none",
+                        "label": "pet owner line",
+                        "gapcolor": null,
+                        "fillstyle": "full",
+                        "antialiased": false,
+                        "dash_capstyle": "butt",
+                        "solid_capstyle": "butt",
+                        "dash_joinstyle": "round",
+                        "solid_joinstyle": "miter",
+                        "pickradius": 5.0,
+                        "drawstyle": "default",
+                        "markevery": null
+                    },
+                    {
+                        "x_serial": {
+                            "variable_number": 0,
+                            "variable_name": "time",
+                            "variable_units": "s",
+                            "data_array": []
+                        },
+                        "y_serial": {
+                            "variable_number": 2,
+                            "variable_name": "dog owners",
+                            "variable_units": "unitless",
+                            "data_array": []
+                        },
+                        "color": "m",
+                        "linewidth": 2.0,
+                        "linestyle": "-",
+                        "marker": "None",
+                        "markersize": 6.0,
+                        "markeredgewidth": 1.0,
+                        "markeredgecolor": "r",
+                        "markerfacecolor": "k",
+                        "markerfacecoloralt": "none",
+                        "label": "dog owner line",
+                        "gapcolor": null,
+                        "fillstyle": "full",
+                        "antialiased": false,
+                        "dash_capstyle": "butt",
+                        "solid_capstyle": "butt",
+                        "dash_joinstyle": "round",
+                        "solid_joinstyle": "miter",
+                        "pickradius": 5.0,
+                        "drawstyle": "default",
+                        "markevery": null
+                    },
+                    {
+                        "x_serial": {
+                            "variable_number": 0,
+                            "variable_name": "time",
+                            "variable_units": "s",
+                            "data_array": []
+                        },
+                        "y_serial": {
+                            "variable_number": 3,
+                            "variable_name": "parrot owners",
+                            "variable_units": "unitless",
+                            "data_array": []
+                        },
+                        "color": "g",
+                        "linewidth": 2.0,
+                        "linestyle": "-",
+                        "marker": "None",
+                        "markersize": 6.0,
+                        "markeredgewidth": 1.0,
+                        "markeredgecolor": "k",
+                        "markerfacecolor": "black",
+                        "markerfacecoloralt": "none",
+                        "label": "parrot owner line",
+                        "gapcolor": null,
+                        "fillstyle": "full",
+                        "antialiased": false,
+                        "dash_capstyle": "butt",
+                        "solid_capstyle": "butt",
+                        "dash_joinstyle": "round",
+                        "solid_joinstyle": "miter",
+                        "pickradius": 5.0,
+                        "drawstyle": "default",
+                        "markevery": null
+                    }
+                ],
+                "title": "owner plot",
+                "x_label": "time",
+                "y_label": "unitless",
+                "legend pos": "upper left",
+                "plot pos": [
+                    0,
+                    0
+                ]
+            },
+            [
+                {
+                    "x_serial": {
+                        "variable_number": 0,
+                        "variable_name": "time",
+                        "variable_units": "s",
+                        "data_array": []
+                    },
+                    "y_serial": {
+                        "variable_number": 1,
+                        "variable_name": "pet owners",
+                        "variable_units": "unitless",
+                        "data_array": []
+                    },
+                    "color": "black",
+                    "linewidth": 2.0,
+                    "linestyle": "-",
+                    "marker": "None",
+                    "markersize": 6.0,
+                    "markeredgewidth": 1.0,
+                    "markeredgecolor": "cyan",
+                    "markerfacecolor": "cyan",
+                    "markerfacecoloralt": "none",
+                    "label": "pet owner line",
+                    "gapcolor": null,
+                    "fillstyle": "full",
+                    "antialiased": false,
+                    "dash_capstyle": "butt",
+                    "solid_capstyle": "butt",
+                    "dash_joinstyle": "round",
+                    "solid_joinstyle": "miter",
+                    "pickradius": 5.0,
+                    "drawstyle": "default",
+                    "markevery": null
+                },
+                {
+                    "x_serial": {
+                        "variable_number": 0,
+                        "variable_name": "time",
+                        "variable_units": "s",
+                        "data_array": []
+                    },
+                    "y_serial": {
+                        "variable_number": 2,
+                        "variable_name": "dog owners",
+                        "variable_units": "unitless",
+                        "data_array": []
+                    },
+                    "color": "m",
+                    "linewidth": 2.0,
+                    "linestyle": "-",
+                    "marker": "None",
+                    "markersize": 6.0,
+                    "markeredgewidth": 1.0,
+                    "markeredgecolor": "r",
+                    "markerfacecolor": "k",
+                    "markerfacecoloralt": "none",
+                    "label": "dog owner line",
+                    "gapcolor": null,
+                    "fillstyle": "full",
+                    "antialiased": false,
+                    "dash_capstyle": "butt",
+                    "solid_capstyle": "butt",
+                    "dash_joinstyle": "round",
+                    "solid_joinstyle": "miter",
+                    "pickradius": 5.0,
+                    "drawstyle": "default",
+                    "markevery": null
+                },
+                {
+                    "x_serial": {
+                        "variable_number": 0,
+                        "variable_name": "time",
+                        "variable_units": "s",
+                        "data_array": []
+                    },
+                    "y_serial": {
+                        "variable_number": 3,
+                        "variable_name": "parrot owners",
+                        "variable_units": "unitless",
+                        "data_array": []
+                    },
+                    "color": "g",
+                    "linewidth": 2.0,
+                    "linestyle": "-",
+                    "marker": "None",
+                    "markersize": 6.0,
+                    "markeredgewidth": 1.0,
+                    "markeredgecolor": "k",
+                    "markerfacecolor": "black",
+                    "markerfacecoloralt": "none",
+                    "label": "parrot owner line",
+                    "gapcolor": null,
+                    "fillstyle": "full",
+                    "antialiased": false,
+                    "dash_capstyle": "butt",
+                    "solid_capstyle": "butt",
+                    "dash_joinstyle": "round",
+                    "solid_joinstyle": "miter",
+                    "pickradius": 5.0,
+                    "drawstyle": "default",
+                    "markevery": null
+                }
+            ]
+        ],
+        [
+            {
+                "lines": [
+                    {
+                        "x_serial": {
+                            "variable_number": 0,
+                            "variable_name": "time",
+                            "variable_units": "s",
+                            "data_array": []
+                        },
+                        "y_serial": {
+                            "variable_number": 2,
+                            "variable_name": "dog owners",
+                            "variable_units": "unitless",
+                            "data_array": []
+                        },
+                        "color": "m",
+                        "linewidth": 2.0,
+                        "linestyle": "-",
+                        "marker": "None",
+                        "markersize": 6.0,
+                        "markeredgewidth": 1.0,
+                        "markeredgecolor": "r",
+                        "markerfacecolor": "k",
+                        "markerfacecoloralt": "none",
+                        "label": "dog owner line",
+                        "gapcolor": null,
+                        "fillstyle": "full",
+                        "antialiased": false,
+                        "dash_capstyle": "butt",
+                        "solid_capstyle": "butt",
+                        "dash_joinstyle": "round",
+                        "solid_joinstyle": "miter",
+                        "pickradius": 5.0,
+                        "drawstyle": "default",
+                        "markevery": null
+                    },
+                    {
+                        "x_serial": {
+                            "variable_number": 0,
+                            "variable_name": "time",
+                            "variable_units": "s",
+                            "data_array": []
+                        },
+                        "y_serial": {
+                            "variable_number": 4,
+                            "variable_name": "dog poop",
+                            "variable_units": "unitless",
+                            "data_array": []
+                        },
+                        "color": "blue",
+                        "linewidth": 2.0,
+                        "linestyle": "-",
+                        "marker": "None",
+                        "markersize": 6.0,
+                        "markeredgewidth": 1.0,
+                        "markeredgecolor": "red",
+                        "markerfacecolor": "g",
+                        "markerfacecoloralt": "none",
+                        "label": "dog dung line",
+                        "gapcolor": null,
+                        "fillstyle": "full",
+                        "antialiased": false,
+                        "dash_capstyle": "butt",
+                        "solid_capstyle": "butt",
+                        "dash_joinstyle": "round",
+                        "solid_joinstyle": "miter",
+                        "pickradius": 5.0,
+                        "drawstyle": "default",
+                        "markevery": null
+                    }
+                ],
+                "title": "Dog plot",
+                "x_label": "time",
+                "y_label": "unitless",
+                "legend pos": "upper left",
+                "plot pos": [
+                    1,
+                    0
+                ]
+            },
+            [
+                {
+                    "x_serial": {
+                        "variable_number": 0,
+                        "variable_name": "time",
+                        "variable_units": "s",
+                        "data_array": []
+                    },
+                    "y_serial": {
+                        "variable_number": 2,
+                        "variable_name": "dog owners",
+                        "variable_units": "unitless",
+                        "data_array": []
+                    },
+                    "color": "m",
+                    "linewidth": 2.0,
+                    "linestyle": "-",
+                    "marker": "None",
+                    "markersize": 6.0,
+                    "markeredgewidth": 1.0,
+                    "markeredgecolor": "r",
+                    "markerfacecolor": "k",
+                    "markerfacecoloralt": "none",
+                    "label": "dog owner line",
+                    "gapcolor": null,
+                    "fillstyle": "full",
+                    "antialiased": false,
+                    "dash_capstyle": "butt",
+                    "solid_capstyle": "butt",
+                    "dash_joinstyle": "round",
+                    "solid_joinstyle": "miter",
+                    "pickradius": 5.0,
+                    "drawstyle": "default",
+                    "markevery": null
+                },
+                {
+                    "x_serial": {
+                        "variable_number": 0,
+                        "variable_name": "time",
+                        "variable_units": "s",
+                        "data_array": []
+                    },
+                    "y_serial": {
+                        "variable_number": 4,
+                        "variable_name": "dog poop",
+                        "variable_units": "unitless",
+                        "data_array": []
+                    },
+                    "color": "blue",
+                    "linewidth": 2.0,
+                    "linestyle": "-",
+                    "marker": "None",
+                    "markersize": 6.0,
+                    "markeredgewidth": 1.0,
+                    "markeredgecolor": "red",
+                    "markerfacecolor": "g",
+                    "markerfacecoloralt": "none",
+                    "label": "dog dung line",
+                    "gapcolor": null,
+                    "fillstyle": "full",
+                    "antialiased": false,
+                    "dash_capstyle": "butt",
+                    "solid_capstyle": "butt",
+                    "dash_joinstyle": "round",
+                    "solid_joinstyle": "miter",
+                    "pickradius": 5.0,
+                    "drawstyle": "default",
+                    "markevery": null
+                }
+            ]
+        ]
+    ],
+    "exit_gui": false,
+    "update_gui_plots": false,
+    "generate_gui_plots": false,
+    "validate_port_settings": false,
+    "obtain_serial_data": false,
+    "plot_serial_data": true,
+    "update_config_to_json": false,
+    "skip_to_beginning": false,
+    "gui": "requested",
+    "backend": "waiting",
+    "designated_author": "gui"
+}
