@@ -196,7 +196,7 @@
             }
         ],
         "baud_rate": "2400",
-        "com_port": "6",
+        "com_port": "4",
         "csv_file": "No File",
         "lines": [
             {

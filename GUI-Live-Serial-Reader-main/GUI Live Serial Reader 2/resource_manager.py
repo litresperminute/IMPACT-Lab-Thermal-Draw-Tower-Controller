@@ -11,5 +11,8 @@ global CURRENT_CONFIG
 CURRENT_CONFIG = os.path.join(script_dir, "current_config.json")
 global COMMUNICATION
 COMMUNICATION = os.path.join(script_dir, "communication.json")
+global LOG_DIR
+LOG_DIR = "experiment_logs"
+os.makedirs(LOG_DIR, exist_ok=True) #Ensure folder exists
 global CSV
-CSV = os.path.join(script_dir, "trial_metadata.csv")
+CSV = os.path.join(LOG_DIR, "trial_metadata.csv")

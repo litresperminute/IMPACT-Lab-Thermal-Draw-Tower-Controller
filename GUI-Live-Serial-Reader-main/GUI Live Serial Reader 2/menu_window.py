@@ -1,3 +1,6 @@
+#Run this to initialize the GUI Live Serial Reader
+#Initializes ctk object
+
 import customtkinter as ctk
 from configuration import configuration, configurations
 from resource_manager import icon_path
