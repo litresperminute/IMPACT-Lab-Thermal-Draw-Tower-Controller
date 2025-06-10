@@ -12,15 +12,21 @@ os.makedirs(log_dir, exist_ok=True)
 
 # === STEP 1: Prompt for Metadata ===
 experiment_id = input("Enter experiment ID (e.g., draw_test_003): ")
+
 material = input("Enter material used (e.g., PETG): ")
 material_color = input("Enter material color: ")
+
 preform_diameter = input("Enter preform diameter in mm (default = 20): ")
 preform_diameter = float(preform_diameter) if preform_diameter.strip() else 20.0
+
 temperature = input("Enter temperature in °C (optional): ")
 temperature = float(temperature) if temperature.strip() else None
+
 drawdown_ratio = input("Enter drawdown ratio (DR) (optional): ")
 drawdown_ratio = float(drawdown_ratio) if drawdown_ratio.strip() else None
-operator = input("Enter your name: ")
+
+perator = input("Enter your name: ")
+
 notes = input("Enter any notes (optional): ")
 
 timestamp = datetime.now().strftime("%Y-%m-%d %H:%M:%S")

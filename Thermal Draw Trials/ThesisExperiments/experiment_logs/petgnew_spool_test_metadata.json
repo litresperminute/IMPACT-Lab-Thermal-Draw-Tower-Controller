@@ -1,0 +1,11 @@
+{
+    "experiment_id": "new_spool_test",
+    "material": "petg",
+    "material_color": "black",
+    "preform_diameter": 20.0,
+    "temperature_C": 160.0,
+    "drawdown_ratio": 50.0,
+    "operator": "Kevin Liu",
+    "start_time": "2025-05-27 12:33:18",
+    "notes": ""
+}
