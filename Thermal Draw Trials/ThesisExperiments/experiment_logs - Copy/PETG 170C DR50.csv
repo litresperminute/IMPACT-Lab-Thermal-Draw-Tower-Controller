@@ -1,12 +1,3 @@
-# experiment_id: PETG 170C DR50
-# material: PETG
-# material_color: Black
-# preform_diameter_mm: 20.0
-# temperature_C: 170.0
-# drawdown_ratio: 50.0
-# operator: Luka Morita
-# start_time: Unknown
-# notes:  multiple feed speeds. Black, concentric infill. A little underextruded
 Time(s),Feed(mm/min),Wind(m/min),Diameter(um),Predicted_diameter(um)
 0.4,1.01,2.51,215.05,400.32
 0.6,0.99,2.43,224.83,403.12

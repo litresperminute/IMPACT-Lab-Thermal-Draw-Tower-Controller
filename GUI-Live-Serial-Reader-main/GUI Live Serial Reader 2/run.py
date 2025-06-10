@@ -220,7 +220,7 @@ class run_plots:
                     return
             if not valid_port:
                 self.serial_com.setDTR(False)
-                time.sleep(1)
+                time.sleep(0.01)
                 self.serial_com.flushInput()
                 self.serial_com.setDTR(True)
             communication_dict['valid_port'] = True

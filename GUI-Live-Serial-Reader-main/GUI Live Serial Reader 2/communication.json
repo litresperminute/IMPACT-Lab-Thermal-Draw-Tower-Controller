@@ -1,17 +1,11 @@
 {
-    "running": true,
+    "running": false,
     "trial_num": 0,
     "new_trial": false,
-    "csv_recording": true,
-    "valid_port": true,
+    "csv_recording": false,
+    "valid_port": false,
     "error_triggered": false,
-    "serial_values": [
-        "2",
-        "2",
-        "2",
-        "350",
-        "315"
-    ],
+    "serial_values": [],
     "plot_dict": [
         [
             {
@@ -323,8 +317,8 @@
     "generate_gui_plots": false,
     "validate_port_settings": false,
     "obtain_serial_data": false,
-    "plot_serial_data": true,
-    "update_config_to_json": false,
+    "plot_serial_data": false,
+    "update_config_to_json": true,
     "skip_to_beginning": false,
     "gui": "requested",
     "backend": "waiting",

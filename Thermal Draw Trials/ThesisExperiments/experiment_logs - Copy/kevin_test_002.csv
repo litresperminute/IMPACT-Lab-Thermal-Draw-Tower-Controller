@@ -1,12 +1,5 @@
-# experiment_id: kevin_test_002,,,,
-# material: ,,,,
-# material_color: ,,,,
-# preform_diameter: 20.0,,,,
-# temperature_C: ,,,,
-# drawdown_ratio: ,,,,
-# operator: ,,,,
-# start_time: 2025-05-15 16:02:20,,,,
-# notes: ,,,,
+"# Tags: draw tower, PETG, trial 7",,,,
+# Description: Test with higher tension and 1.5 mm nozzle,,,,
 Time(s),Feed(mm/min),Wind(m/min),Diameter(um),Predicted_diameter(um)
 1.22,4.11,10.13,342.13,402.59
 1.42,4.11,10.15,312.81,402.32

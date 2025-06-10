@@ -1,12 +1,3 @@
-# experiment_id: shape_memory_hex_001
-# material: shape_memory
-# material_color: red
-# preform_diameter: 20.0
-# temperature_C: 130.0
-# drawdown_ratio: 
-# operator: Kevin LIu
-# start_time: 2025-05-16 12:28:28
-# notes: 
 Time(s),Feed(mm/min),Wind(m/min),Diameter(um),Predicted_diameter(um)
 1.22,2.02,2.01,1143.69,633.58
 1.42,2.03,2.00,1143.69,637.16

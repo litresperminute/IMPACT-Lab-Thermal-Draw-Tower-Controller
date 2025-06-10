@@ -1,12 +1,3 @@
-# experiment_id: PETG 160C DR50 Feed Rate Testing
-# material: PETG
-# material_color: Black
-# preform_diameter_mm: 20.0
-# temperature_C: 160.0
-# drawdown_ratio: 50.0
-# operator: Luka Morita
-# start_time: Unknown
-# notes:  Tested feed rates of [1,2,4,5] with a constant temp and DR.
 Time(s),Feed(mm/min),Wind(m/min),Diameter(um),Predicted_diameter(um)
 9.3,1,2.4,0,407.27
 9.5,1,2.4,0,407.27
