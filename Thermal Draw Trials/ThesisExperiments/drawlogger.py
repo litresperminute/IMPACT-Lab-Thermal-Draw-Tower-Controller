@@ -10,30 +10,62 @@ import os
 log_dir = "experiment_logs"
 os.makedirs(log_dir, exist_ok=True)
 
-# === STEP 1: Prompt for Metadata ===
-experiment_id = input("Enter experiment ID (e.g., draw_test_003): ")
-material = input("Enter material used (e.g., PETG): ")
-material_color = input("Enter material color: ")
-preform_diameter = input("Enter preform diameter in mm (default = 20): ")
-preform_diameter = float(preform_diameter) if preform_diameter.strip() else 20.0
-temperature = input("Enter temperature in °C (optional): ")
-temperature = float(temperature) if temperature.strip() else None
-drawdown_ratio = input("Enter drawdown ratio (DR) (optional): ")
-drawdown_ratio = float(drawdown_ratio) if drawdown_ratio.strip() else None
-operator = input("Enter your name: ")
-notes = input("Enter any notes (optional): ")
 
-timestamp = datetime.now().strftime("%Y-%m-%d %H:%M:%S")
-csv_filename = os.path.join(log_dir, f"{material}{experiment_id}.csv")
-json_filename = os.path.join(log_dir, f"{material}{experiment_id}_metadata.json")
-
-# === STEP 2: Detect Arduino Port ===
+# === STEP 1: Detect Arduino Port ===
 def find_port():
     ports = serial.tools.list_ports.comports()
     for p in ports:
         if "Arduino" in p.description or "ttyACM" in p.device or "ttyUSB" in p.device:
             return p.device
     return None
+
+# === STEP 2: Prompt for and Save Metadata ===
+def save_metadata():
+    material = input("Material used (e.g., PETG): ")
+
+    geometry = input("Preform geometry (ie. cyl, sq, 7ch): ")
+
+    preform_diameter = input("Preform diameter in mm (default = 20): ")
+    preform_diameter = float(preform_diameter) if preform_diameter.strip() else 20.0
+
+    material_color = input("Material color: ")
+
+    temperature = input("Temperature in °C (optional): ")
+    temperature = float(temperature) if temperature.strip() else None
+
+    drawdown_ratio = input("Drawdown ratio (DR) (optional): ")
+    drawdown_ratio = float(drawdown_ratio) if drawdown_ratio.strip() else None
+
+    trial_number = input("Trial number for this setup: ")
+
+    operator = input("Operator name: ")
+
+    notes = input("Enter any notes (optional): ")
+
+    file_name = f"{material}_{geometry}{preform_diameter}_{material_color}_DR{drawdown_ratio}_{trial_number}"
+
+    timestamp = datetime.now().strftime("%Y-%m-%d %H:%M:%S")
+    csv_filename = os.path.join(log_dir, f"{file_name}.csv")
+    json_filename = os.path.join(log_dir, f"META-{file_name}.json")
+    
+    metadata = {
+        "material": material,
+        "geometry": geometry,
+        # "experiment_id": experiment_id,
+        "preform_diameter": preform_diameter,
+        "material_color": material_color,
+        "temperature_C": temperature,
+        "drawdown_ratio": drawdown_ratio,
+        "trial_number": trial_number,
+        "operator": operator,
+        "start_time": timestamp,
+        "notes": notes
+    }
+
+
+    with open(json_filename, 'w') as f:
+        json.dump(metadata, f, indent=4)
+    print(f"Metadata saved to: {json_filename}")
 
 # === STEP 3: Log Serial Data (Filter + Print Non-Data Lines) ===
 def log_serial_data(port, baud=115200):
@@ -64,28 +96,17 @@ def log_serial_data(port, baud=115200):
     except Exception as e:
         print("Error:", e)
 
-
-# === STEP 4: Save Metadata to JSON ===
-def save_metadata():
-    metadata = {
-        "experiment_id": experiment_id,
-        "material": material,
-        "material_color": material_color,
-        "preform_diameter": preform_diameter,
-        "temperature_C": temperature,
-        "drawdown_ratio": drawdown_ratio,
-        "operator": operator,
-        "start_time": timestamp,
-        "notes": notes
-    }
-    with open(json_filename, 'w') as f:
-        json.dump(metadata, f, indent=4)
-    print(f"Metadata saved to: {json_filename}")
-
 # === Run Everything ===
-port = find_port()
-if not port:
-    print("No Arduino found.")
-else:
-    save_metadata()
-    log_serial_data(port)
+def main():
+    port = find_port()
+    if not port:
+        print("No Arduino found.")
+    else:
+        save_metadata()
+
+        input("Press Enter to begin logging...")
+
+        log_serial_data(port)
+
+
+main()
