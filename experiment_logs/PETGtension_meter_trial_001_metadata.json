@@ -1,0 +1,11 @@
+{
+    "experiment_id": "tension_meter_trial_001",
+    "material": "PETG",
+    "material_color": "Clear",
+    "preform_diameter": 20.0,
+    "temperature_C": 160.0,
+    "drawdown_ratio": 50.0,
+    "operator": "Kevin Liu",
+    "start_time": "2025-06-10 12:16:51",
+    "notes": ""
+}
