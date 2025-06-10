@@ -62,7 +62,21 @@ def save_metadata():
         "notes": notes
     }
 
+    ############################## Inject Metadata into CSV header
+        # Read original CSV content
+        with open(csv_path, 'r') as cf:
+            csv_lines = cf.readlines()
 
+        # Create metadata comment lines
+        metadata_lines = []
+        for key, value in metadata.items():
+            if value is None:
+                value = ""
+            metadata_lines.append(f"# {key}: {value}\n")
+
+
+
+    ###############################
     with open(json_filename, 'w') as f:
         json.dump(metadata, f, indent=4)
     print(f"Metadata saved to: {json_filename}")
@@ -108,5 +122,5 @@ def main():
 
         log_serial_data(port)
 
-
-main()
+if __name__ == "__main__":
+    main()
