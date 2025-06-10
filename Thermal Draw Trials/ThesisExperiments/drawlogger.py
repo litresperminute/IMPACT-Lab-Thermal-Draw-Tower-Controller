@@ -60,7 +60,7 @@ def log_serial_data(port, baud=115200):
                     if len(parts) == 5:
                         writer.writerow(parts)
     except KeyboardInterrupt:
-        print("\nLogging stopped by user.")
+        print(f"\nLogging stopped by user. Saved to {csv_filename}.csv")
     except Exception as e:
         print("Error:", e)
 
