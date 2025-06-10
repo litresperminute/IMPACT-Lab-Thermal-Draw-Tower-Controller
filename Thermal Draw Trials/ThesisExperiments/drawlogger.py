@@ -36,11 +36,11 @@ def save_metadata():
     drawdown_ratio = input("Drawdown ratio (DR) (optional): ")
     drawdown_ratio = float(drawdown_ratio) if drawdown_ratio.strip() else None
 
-    trial_number = input("Trial number for this setup: ")
+    trial_number = input("Trial number for this setup (ie. 001): ")
 
     operator = input("Operator name: ")
 
-    notes = input("Enter any notes (optional): ")
+    notes = input("Enter any notes (optional): ") # Take out commas and replace them with something else
 
     file_name = f"{material}_{geometry}{preform_diameter}_{material_color}_DR{drawdown_ratio}_{trial_number}"
 
