@@ -6,10 +6,6 @@ import time
 from datetime import datetime
 import os
 
-# === Setup Output Directory ===
-log_dir = "experiment_logs"
-os.makedirs(log_dir, exist_ok=True)
-
 
 # === STEP 1: Detect Arduino Port ===
 def find_port():
@@ -20,7 +16,7 @@ def find_port():
     return None
 
 # === STEP 2: Prompt for and Save Metadata ===
-def save_metadata():
+def save_metadata(log_dir):
     material = input("Material used (e.g., PETG): ")
 
     geometry = input("Preform geometry (ie. cyl, sq, 7ch): ")
@@ -39,8 +35,7 @@ def save_metadata():
     trial_number = input("Trial number for this setup (ie. 001): ")
 
     operator = input("Operator name: ")
-
-    notes = input("Enter any notes (optional): ") # Take out commas and replace them with something else
+    notes = input("Enter any notes (optional): ").replace(",",";") # Take out commas and replace them with something else
 
     file_name = f"{material}_{geometry}{preform_diameter}_{material_color}_DR{drawdown_ratio}_{trial_number}"
 
@@ -62,38 +57,29 @@ def save_metadata():
         "notes": notes
     }
 
-    ############################## Inject Metadata into CSV header
-        # Read original CSV content
-        with open(csv_path, 'r') as cf:
-            csv_lines = cf.readlines()
-
-        # Create metadata comment lines
-        metadata_lines = []
+    # Write Metadata and Headers into CSV
+    with open(csv_filename, 'w', newline='') as f:
         for key, value in metadata.items():
             if value is None:
                 value = ""
-            metadata_lines.append(f"# {key}: {value}\n")
-
-
-
-    ###############################
-    with open(json_filename, 'w') as f:
-        json.dump(metadata, f, indent=4)
-    print(f"Metadata saved to: {json_filename}")
+            f.write(f"# {key}: {value}\n")
+        f.write("Time(s),Feed(mm/min),Wind(m/min),Diameter(um),Predicted_diameter(um)\n")
+    print(f"Metadata and headers written to: {csv_filename}")
+    return csv_filename
 
 # === STEP 3: Log Serial Data (Filter + Print Non-Data Lines) ===
-def log_serial_data(port, baud=115200):
+def log_serial_data(port, baud=115200, csv_filename='Unnamed_trial'):
     try:
-        with serial.Serial(port, baud, timeout=1) as ser, open(csv_filename, 'w', newline='') as csvfile:
+        with serial.Serial(port, baud, timeout=1) as ser, open(csv_filename, 'a', newline='') as csvfile:
             print(f"\nLogging started. Press Ctrl+C to stop.\nSaving to: {csv_filename}")
             writer = csv.writer(csvfile)
-            writer.writerow([
+            """ writer.writerow([
                 "Time(s)",
                 "Feed(mm/min)",
                 "Wind(m/min)",
                 "Diameter(um)",
                 "Predicted_diameter(um)"
-            ])
+            ]) """
             
             start_time = time.time()
             while True:
@@ -112,15 +98,19 @@ def log_serial_data(port, baud=115200):
 
 # === Run Everything ===
 def main():
+    #Setup Output Directory
+    log_dir = "experiment_logs"
+    os.makedirs(log_dir, exist_ok=True)
+
     port = find_port()
     if not port:
         print("No Arduino found.")
     else:
-        save_metadata()
+        csv_filename = save_metadata(log_dir)
 
         input("Press Enter to begin logging...")
 
-        log_serial_data(port)
+        log_serial_data(port,csv_filename=csv_filename)
 
 if __name__ == "__main__":
     main()
