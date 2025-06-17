@@ -12,28 +12,34 @@ mpl.rcParams['font.size'] = 14
 #Try a color from seaborn
 colors = sns.color_palette("pastel6",4)
 
+#PETG_cyl20.0_clear_DR50.0_001.csv
+#PETG_cyl20.0_clear_DR50.0_002.csv
+#PETG_cyl20.0_clear_DR50.0_003.csv
+#PETG_cyl20.0_Clear_DR50.0_003b.csv
+#PETG_cyl20.0_clear_DR50.0_004.csv
+
 # === Settings ===
 log_dir = "experiment_logs"
 fig_dir = "figures"
 os.makedirs(fig_dir, exist_ok=True)
 experiment_ids = [
-    {"filename": "PETG 140C DR50.csv", "start_time": 200, "label": "Trial A"},
-    {"filename": "PETG 150C DR50.csv", "start_time": 900, "label": "Trial B"},
-    {"filename": "PETG 160C DR50 Feed Rate Testing.csv", "start_time": 900, "label": "Trial C"},
-    {"filename": "PETG 170C DR50.csv", "start_time": 400, "label": "Trial D"}
+    {"filename": "PETG_cyl20.0_clear_DR50.0_002.csv", "start_time": 160, "label": "Trial A"},
+    {"filename": "PETG_cyl20.0_clear_DR50.0_001.csv", "start_time": 290, "label": "Trial B"},
+    {"filename": "PETG_cyl20.0_clear_DR50.0_003b.csv", "start_time": 200, "label": "Trial C"},
+    {"filename": "PETG_cyl20.0_clear_DR50.0_004.csv", "start_time": 0, "label": "Trial D"}
 ]
 
 segment_duration = 200 #seonds
 
 # === Plotting ===
 fig, axes = plt.subplots(nrows=4, ncols=1, figsize=(8, 8), sharex=True)
-labels = ["T = 140°C", "T = 150°C", "T = 160°C", "T = 170°C"]
+labels = ["1mm/min","2mm/min","4mm/min","5mm/min"]
 lines = [] # store line handles here
 
 for i, exp in enumerate(experiment_ids):
     #Load Exp ID
     filepath = os.path.join(log_dir, exp["filename"])
-    df = pd.read_csv(filepath)
+    df = pd.read_csv(filepath,skiprows=10)
 
     # Slice and normalize time
     seg = df[(df["Time(s)"] >= exp["start_time"]) & (df["Time(s)"] <= exp["start_time"] + segment_duration)].copy()
