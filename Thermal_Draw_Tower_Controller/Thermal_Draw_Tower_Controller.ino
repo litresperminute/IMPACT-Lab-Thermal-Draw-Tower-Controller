@@ -71,7 +71,7 @@ RunningAverage myRA(50);
 //-------------------------------------------------------------------------------------------------------------------------------------------------------------------------
 // defining controls for the winder
 bool control_winder = true;
-int setpoint = 381; // diameter micrometer set point in microns
+int setpoint = 400;// correct output diameter for a 20mm preform with DR=50. For a 19.05mm preform with DR=50, use 381
 float error = 0; // initialize error
 float fiber_diameter = 0; // starting value
 
@@ -299,7 +299,7 @@ void control_function(bool control_winder,  float &winder_pot_value, float fiber
   float new_winder_speed;
   //Task 0: Have the speed estimate
   // "plant"
-  float plug_diameter = 19.05;// 25.4*3.0/4.0; //mm 1 inch plug - should check
+  float plug_diameter = 20; // diameter of the preform. If using a 3/4 in preform (ex: stock mcmaster carr PETG rod), use 19.05 instead.
   float target_diameter = setpoint / 1000.0; // convert microns to the mm
   // feeder speed is already defined with variable feeder_speed - may not be defined in here though . defined in mm/min for now it should be estimated that the feeder speed is constant.
   float target_winder_speed = 2.0 * sq(plug_diameter) / sq(target_diameter) / 1000.0; // m/min this is with a 3 mm/min feedspeed
