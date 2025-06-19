@@ -26,11 +26,11 @@ os.makedirs(fig_dir, exist_ok=True)
 # === Load Data ===
 csv_path = os.path.join(log_dir, f"{experiment_id}.csv")
 print("Looking in:", csv_path)
-json_path = os.path.join(log_dir, f"{experiment_id}_metadata.json")
+# json_path = os.path.join(log_dir, f"{experiment_id}_metadata.json")
 
-df = pd.read_csv(csv_path)
-with open(json_path, "r") as f:
-    meta = json.load(f)
+df = pd.read_csv(csv_path, skiprows=10)
+# with open(json_path, "r") as f:
+#     meta = json.load(f)
 
 # === Plotting ===
 
@@ -61,7 +61,7 @@ if plot_pred_diam:
     plt.plot(df["Time(s)"], df["Predicted_diameter(um)"], label="Predicted Diameter", linewidth=1, color="green")
 
 plt.axhline(y=400, color='red', linestyle='--', linewidth=1.2, label='Target = 400μm')
-plt.title(f"{meta['material']} ({meta['material_color']})")
+# plt.title(f"{meta['material']} ({meta['material_color']})")
 plt.xlabel("Time (s)")
 plt.ylabel("Diameter (μm)")
 plt.legend()
