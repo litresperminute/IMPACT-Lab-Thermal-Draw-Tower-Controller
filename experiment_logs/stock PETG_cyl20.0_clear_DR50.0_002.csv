@@ -1,0 +1,11 @@
+# material: stock PETG
+# geometry: cyl
+# preform_diameter: 20.0
+# material_color: clear
+# temperature_C: 160.0
+# drawdown_ratio: 50.0
+# trial_number: 002
+# operator: Kevin Liu
+# start_time: 2025-06-19 15:57:12
+# notes: stock PETG using feedback control; feed speed 4 mm/min
+Time(s),Feed(mm/min),Wind(m/min),Diameter(um),Predicted_diameter(um)
