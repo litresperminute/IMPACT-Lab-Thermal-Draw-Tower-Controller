@@ -12,6 +12,12 @@ mpl.rcParams['font.size'] = 14
 #Try a color from seaborn
 colors = sns.color_palette("pastel6",4)
 
+#PETG_cyl20.0_clear_DR50.0_001.csv
+#PETG_cyl20.0_clear_DR50.0_002.csv
+#PETG_cyl20.0_clear_DR50.0_003.csv
+#PETG_cyl20.0_Clear_DR50.0_003b.csv
+#PETG_cyl20.0_clear_DR50.0_004.csv
+
 # === Settings ===
 log_dir = "experiment_logs"
 fig_dir = "figures"
@@ -27,7 +33,7 @@ segment_duration = 200 #seonds
 
 # === Plotting ===
 fig, axes = plt.subplots(nrows=4, ncols=1, figsize=(8, 8), sharex=True)
-labels = ["T = 140°C", "T = 150°C", "T = 160°C", "T = 170°C"]
+labels = ["1mm/min","2mm/min","4mm/min","5mm/min"]
 lines = [] # store line handles here
 
 for i, exp in enumerate(experiment_ids):
