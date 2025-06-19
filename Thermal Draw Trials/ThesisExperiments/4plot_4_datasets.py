@@ -26,7 +26,7 @@ experiment_ids = [
     {"filename": "PETG_cyl20.0_clear_DR50.0_002.csv", "start_time": 160, "label": "Trial A"},
     {"filename": "PETG_cyl20.0_clear_DR50.0_001.csv", "start_time": 290, "label": "Trial B"},
     {"filename": "PETG_cyl20.0_clear_DR50.0_003b.csv", "start_time": 200, "label": "Trial C"},
-    {"filename": "PETG_cyl20.0_clear_DR50.0_004.csv", "start_time": 0, "label": "Trial D"}
+    {"filename": "PETG_cyl20.0_clear_DR50.0_004.csv", "start_time": 80, "label": "Trial D"}
 ]
 
 segment_duration = 200 #seonds
@@ -39,7 +39,7 @@ lines = [] # store line handles here
 for i, exp in enumerate(experiment_ids):
     #Load Exp ID
     filepath = os.path.join(log_dir, exp["filename"])
-    df = pd.read_csv(filepath,skiprows=10)
+    df = pd.read_csv(filepath, skiprows=10)
 
     # Slice and normalize time
     seg = df[(df["Time(s)"] >= exp["start_time"]) & (df["Time(s)"] <= exp["start_time"] + segment_duration)].copy()
