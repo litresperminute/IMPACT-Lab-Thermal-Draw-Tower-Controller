@@ -28,7 +28,7 @@ csv_path = os.path.join(log_dir, f"{experiment_id}.csv")
 print("Looking in:", csv_path)
 json_path = os.path.join(log_dir, f"{experiment_id}_metadata.json")
 
-df = pd.read_csv(csv_path)
+df = pd.read_csv(csv_path, skipline=10)
 with open(json_path, "r") as f:
     meta = json.load(f)
 
