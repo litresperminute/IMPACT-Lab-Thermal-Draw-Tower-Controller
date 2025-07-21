@@ -3,13 +3,13 @@ import numpy as np
 import matplotlib.pyplot as plt
 
 # === Load CSV (assumes metadata lines start with "#")
-df = pd.read_csv("experiment_logs/PETG_oct20.0_black_DR50.0_002.csv", comment="#")
+df = pd.read_csv("experiment_logs\PETG_oct90deg-annealed20.0_black_DR50.0_001.csv", comment="#")
 
 # === Set analysis parameters
 signal_col = "Diameter(um)"
 time_col = "Time(s)"
-start_time = 100.0   # in seconds
-end_time = 300.0     # in seconds
+start_time =  750.0   # in seconds
+end_time = 1000.0     # in seconds
 
 # === Select segment
 df_segment = df[(df[time_col] >= start_time) & (df[time_col] <= end_time)].copy()
@@ -23,7 +23,7 @@ time_diffs = np.diff(time)
 if not np.allclose(time_diffs, time_diffs[0], atol=1e-3):
     print("Warning: Non-uniform time steps detected — FFT may be less accurate.")
 dt = np.mean(time_diffs)
-fs = 1 / dt  # sampling frequency (Hz)
+fs = 1 / dt  # sampling frequency (Hz). Should be 5hz. 
 
 # === Perform FFT
 N = len(signal)
@@ -70,7 +70,7 @@ print(f"Low-to-High Freq Power Ratio (<10 Hz / ≥10 Hz): {low_high_ratio:.3f}")
 
 # === Plot frequency spectrum
 plt.figure(figsize=(10, 5))
-plt.plot(freqs, amplitudes, label="FFT Amplitude Spectrum")
+plt.plot(freqs, amplitudes, label="FFT Amplitude Spectrum",color="b")
 plt.ylim(0,50)
 plt.xlabel("Frequency (Hz)")
 plt.ylabel("Amplitude (µm)")

@@ -1,15 +1,15 @@
 import pandas as pd
 
 # === Load your CSV (assumes metadata starts with "#")
-df = pd.read_csv("experiment_logs/PETG_oct20.0_black_DR50.0_003.csv", comment="#")
+df = pd.read_csv("experiment_logs/PETG 160C DR50 Feed Rate Testing.csv", comment="#")
 
 # === Set analysis parameters
 signal_col = "Diameter(um)"
 window_sizes = [5, 25, 50, 100, 250, 500]  # rolling window sizes
 
 # === Define time segment to analyze
-start_time = 600.0   # in seconds
-end_time = 800.0     # in seconds
+start_time = 900.0   # in seconds
+end_time = 1100.0     # in seconds
 
 # === Filter data by time segment
 df_segment = df[(df["Time(s)"] >= start_time) & (df["Time(s)"] <= end_time)].copy()

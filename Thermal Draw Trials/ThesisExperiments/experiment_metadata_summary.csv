@@ -1,4 +1,0 @@
-experiment_id,material,material_color,preform_diameter_mm,operator,start_time,notes,folder,preform_diameter,temperature_C,drawdown_ratio
-001,PETG,Clear,,Luka,2025-05-09 18:35:23,,experiment_logs,20.0,,
-1,PETG,Clear,,Luka,2025-05-09 18:51:32,No Feedback Control,experiment_logs,20.0,160.0,50.0
-CLEAR PETG NO FEEDBACK 160C DR50,PETG,Clear,20.0,Luka Morita,Unknown,"Transparent PETG, Rectilinear infill pattern",experiment_logs,,,
