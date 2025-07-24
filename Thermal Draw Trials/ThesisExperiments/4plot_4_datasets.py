@@ -23,10 +23,10 @@ log_dir = "experiment_logs"
 fig_dir = "figures"
 os.makedirs(fig_dir, exist_ok=True)
 experiment_ids = [
-    {"filename": "PETG_cyl20.0_clear_DR50.0_002.csv", "start_time": 160, "label": "Trial A"},
-    {"filename": "PETG_cyl20.0_clear_DR50.0_001.csv", "start_time": 290, "label": "Trial B"},
-    {"filename": "PETG_cyl20.0_clear_DR50.0_003b.csv", "start_time": 200, "label": "Trial C"},
-    {"filename": "PETG_cyl20.0_clear_DR50.0_004.csv", "start_time": 80, "label": "Trial D"}
+    {"filename": "PETG_cyl20.0_clear_DR50.0_002.csv", "start_time": 300, "label": "Trial A"},
+    {"filename": "PETG_cyl20.0_clear_DR50.0_001.csv", "start_time": 200, "label": "Trial B"},
+    {"filename": "PETG_cyl20.0_clear_DR50.0_003.csv", "start_time": 0, "label": "Trial C"},
+    {"filename": "PETG_cyl20.0_clear_DR50.0_004.csv", "start_time": 0, "label": "Trial D"}
 ]
 
 segment_duration = 200 #seonds
