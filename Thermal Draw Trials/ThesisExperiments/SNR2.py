@@ -5,20 +5,10 @@ import os
 analysis_plan = [
 
     {
-        "filename": "experiment_logs/PETG_oct20.0_black_DR50.0_003.csv",
-        "start_time": 600.0,
-        "end_time": 800.0
-    },
-    {
-        "filename": "experiment_logs/PETG_oct20.0_black_DR50.0_001.csv",
-        "start_time": 400.0,
-        "end_time": 600.0
-    },
-    {
-        "filename": "experiment_logs/PETG_oct20.0_black_DR50.0_002.csv",
+        "filename": "experiment_logs/kp_0.01, ki_0.005.csv",
         "start_time": 100.0,
         "end_time": 300.0
-    },
+    }
     
     # Add more entries here as needed
 ]
@@ -27,7 +17,7 @@ analysis_plan = [
 signal_col = "Diameter(um)"
 time_col = "Time(s)"
 window_sizes = [5, 25, 50, 100, 250, 500]
-target_diameter = 400.0  # Target fiber diameter in µm
+target_diameter = 381  # Target fiber diameter in µm
 
 # === Results list
 results = []

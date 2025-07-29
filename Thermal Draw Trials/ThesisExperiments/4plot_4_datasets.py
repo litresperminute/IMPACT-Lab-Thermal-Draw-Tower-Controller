@@ -1,3 +1,4 @@
+#### WARNING: the number of padding columns has to be hte same for each dataset 
 import pandas as pd
 import matplotlib.pyplot as plt
 import matplotlib.gridspec as gridspec

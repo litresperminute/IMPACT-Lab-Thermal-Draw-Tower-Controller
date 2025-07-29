@@ -3,13 +3,13 @@ import numpy as np
 import matplotlib.pyplot as plt
 
 # === Load CSV (assumes metadata lines start with "#")
-df = pd.read_csv("experiment_logs\PETG_oct90deg-annealed20.0_black_DR50.0_001.csv", comment="#")
+df = pd.read_csv("experiment_logs/PETG 160C DR50 Feed Rate Testing.csv", comment="#")
 
 # === Set analysis parameters
 signal_col = "Diameter(um)"
 time_col = "Time(s)"
-start_time =  750.0   # in seconds
-end_time = 1000.0     # in seconds
+start_time = 1500.0   # in seconds
+end_time = 1660.0     # in seconds
 
 # === Select segment
 df_segment = df[(df[time_col] >= start_time) & (df[time_col] <= end_time)].copy()
@@ -37,8 +37,8 @@ amplitudes = np.abs(fft_values) * 2 / N  # normalize amplitude
 
 ####METRICS
 # 0. Trim amplitudes
-amplitudes = amplitudes[5:]
-freqs = freqs[5:]
+amplitudes = amplitudes[1:]
+freqs = freqs[1:]
 # 1. Total power
 total_power = np.sum(amplitudes**2)
 
