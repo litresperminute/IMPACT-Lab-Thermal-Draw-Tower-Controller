@@ -22,15 +22,24 @@ def save_metadata(log_dir):
     geometry = input("Preform geometry (ie. cyl, sq, 7ch): ")
 
     preform_diameter = input("Preform diameter in mm (default = 20): ")
-    preform_diameter = float(preform_diameter) if preform_diameter.strip() else 20.0
+    try:
+        preform_diameter = float(preform_diameter) if preform_diameter.strip() else 20.0
+    except:
+        None 
 
     material_color = input("Material color: ")
 
     temperature = input("Temperature in °C (optional): ")
-    temperature = float(temperature) if temperature.strip() else None
+    try:
+        temperature = float(temperature) if temperature.strip() else None
+    except:
+        None # If input is not a number, save as string by default
 
     drawdown_ratio = input("Drawdown ratio (DR) (optional): ")
-    drawdown_ratio = float(drawdown_ratio) if drawdown_ratio.strip() else None
+    try:
+        drawdown_ratio = float(drawdown_ratio) if drawdown_ratio.strip() else None
+    except:
+        None # If input is not a number, save as string by default
 
     trial_number = input("Trial number for this setup (ie. 001): ")
 
@@ -99,7 +108,7 @@ def log_serial_data(port, baud=115200, csv_filename='Unnamed_trial'):
 # === Run Everything ===
 def main():
     #Setup Output Directory
-    log_dir = "experiment_logs"
+    log_dir = "Thermal Draw Trials\ThesisExperiments\experiment_logs"
     os.makedirs(log_dir, exist_ok=True)
 
     port = find_port()
