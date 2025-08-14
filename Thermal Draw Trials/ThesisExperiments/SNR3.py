@@ -3,21 +3,18 @@ import os
 
 # === Configuration: Files and time segments ===
 analysis_plan = [
-
     {
-        "filename": "experiment_logs/stock PETG_cyl20.0_clear_DR50.0_030.csv",
-        "start_time": 0.0,
-        "end_time": 250.0
+        "filename": "experiment_logs/PETG_oct20.0_black_DR50.0_011.csv",
+        "start_time": 200.0,
+        "end_time": 800.0
     }
-    
-    # Add more entries here as needed
 ]
 
 # === Parameters ===
 signal_col = "Diameter(um)"
 time_col = "Time(s)"
 window_sizes = [5, 25, 50, 100, 250, 500]
-target_diameter = 381  # Target fiber diameter in µm
+target_diameter = 400  # Target fiber diameter in µm
 
 # === Results list
 results = []
@@ -31,31 +28,33 @@ for plan in analysis_plan:
     print(f"\nAnalyzing file: {file}")
     print(f"  Time segment: {start_time}s to {end_time}s")
 
-    # Load and segment the file
+    # Load entire file
     df = pd.read_csv(file, comment="#")
-    df_segment = df[(df[time_col] >= start_time) & (df[time_col] <= end_time)].copy()
 
-    if df_segment.empty:
+    # Bias is computed only within time window (raw signal)
+    df_bias_segment = df[(df[time_col] >= start_time) & (df[time_col] <= end_time)].copy()
+    if df_bias_segment.empty:
         print("  Warning: No data in specified time range.")
         continue
 
-    # Calculate bias (mean deviation from target)
-    bias = df_segment[signal_col].mean() - target_diameter
+    bias = df_bias_segment[signal_col].mean() - target_diameter
 
     # Loop through each window size
     for window_size in window_sizes:
-        # Rolling average (trend)
-        df_segment["trend"] = df_segment[signal_col].rolling(window=window_size, center=True).mean()
+        df_copy = df.copy()
 
-        # Residuals
-        df_segment["residual"] = df_segment[signal_col] - df_segment["trend"]
+        # Compute trend using centered rolling average on the full data
+        df_copy["trend"] = df_copy[signal_col].rolling(window=window_size, center=True).mean()
+        df_copy["residual"] = df_copy[signal_col] - df_copy["trend"]
 
-        # Std dev of residuals (detrended noise)
+        # Truncate *after* rolling average to preserve center info
+        df_segment = df_copy[(df_copy[time_col] >= start_time) & (df_copy[time_col] <= end_time)].copy()
+
+        # Drop NaNs (from rolling) before calculating std
         detrended_std = df_segment["residual"].dropna().std()
 
         print(f"    Window={window_size:>4}: Std = {detrended_std:.3f} µm | Bias = {bias:.3f} µm")
 
-        # Store result
         results.append({
             "filename": os.path.basename(file),
             "start_time": start_time,

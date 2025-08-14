@@ -9,7 +9,7 @@ import os
 import json
 #Specify some matplotlib defaults
 mpl.rcParams['pdf.fonttype'] = 42
-mpl.rcParams['font.size'] = 14
+mpl.rcParams['font.size'] = 20
 #Try a color from seaborn
 colors = sns.color_palette("pastel6",4)
 
@@ -24,18 +24,18 @@ log_dir = "experiment_logs"
 fig_dir = "figures"
 os.makedirs(fig_dir, exist_ok=True)
 experiment_ids = [
-    {"filename": "PETG_cyl20.0_clear_DR50.0_002.csv", "start_time": 300, "label": "Trial A"},
-    {"filename": "PETG_cyl20.0_clear_DR50.0_001.csv", "start_time": 200, "label": "Trial B"},
-    {"filename": "PETG_cyl20.0_clear_DR50.0_003.csv", "start_time": 0, "label": "Trial C"},
-    {"filename": "PETG_cyl20.0_clear_DR50.0_004.csv", "start_time": 0, "label": "Trial D"}
+    {"filename": "CLEAR PETG NO FEEDBACK 160C DR50.csv", "start_time": 500, "label": "Stock PETG Preform"},
+    {"filename": "PETG 160C DR50 Feed Rate Testing.csv", "start_time": 900, "label": "AM PETG Preform"},
+    {"filename": "stock PETG_cyl20.0_clear_DR50.0_030.csv", "start_time": 0, "label": "AM PETG Preform"},
+    {"filename": "PETG 160C DR50 Feed Rate Testing.csv", "start_time": 1600, "label": "AM PETG Preform"},
 ]
 
 segment_duration = 200 #seonds
 
 # === Plotting ===
 fig, axes = plt.subplots(nrows=4, ncols=1, figsize=(8, 8), sharex=True)
-labels = ["1mm/min","2mm/min","4mm/min","5mm/min"]
-lines = [] # store line handles here
+labels = ["Stock Preform, 2mm/min feed","AM Preform, 2mm/min feed","Stock Preform, 5mm/min feed","AM Preform, 5mm/min feed"]
+lines = [381,400,381,400] # store line handles here
 
 for i, exp in enumerate(experiment_ids):
     #Load Exp ID
@@ -49,7 +49,7 @@ for i, exp in enumerate(experiment_ids):
     ax = axes[i]
     line, = ax.plot(seg["Time(s)"], seg["Diameter(um)"], label=labels[i],color=colors[i])
     lines.append(line)
-    ax.axhline(y=400, color='red', linestyle='--', linewidth=1.2, label='Target Dia. = 400 μm')
+    ax.axhline(y=lines[i], color='red', linestyle='--', linewidth=1.2, label=f"Target Dia. = {lines[i]} μm")
     ax.legend(loc='upper right', fontsize=10, edgecolor='white', facecolor='white', framealpha=0.5)
     ax.grid(False)
     ax.set_ylim(200,1050)

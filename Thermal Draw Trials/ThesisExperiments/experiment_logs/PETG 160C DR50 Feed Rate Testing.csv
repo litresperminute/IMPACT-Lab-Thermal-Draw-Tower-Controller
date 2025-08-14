@@ -1,4 +1,5 @@
 # experiment_id: PETG 160C DR50 Feed Rate Testing,,,,
+# geometry: cyl
 # material: PETG,,,,
 # material_color: Black,,,,
 # preform_diameter_mm: 20.0,,,,
