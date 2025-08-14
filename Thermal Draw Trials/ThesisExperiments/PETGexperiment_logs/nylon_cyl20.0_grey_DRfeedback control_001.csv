@@ -1,0 +1,11 @@
+# material: nylon
+# geometry: cyl
+# preform_diameter: 20.0
+# material_color: grey
+# temperature_C: 160.0
+# drawdown_ratio: feedback control
+# trial_number: 001
+# operator: Kevin Liu
+# start_time: 2025-08-11 11:37:28
+# notes: First trial with Nikoo
+Time(s),Feed(mm/min),Wind(m/min),Diameter(um),Predicted_diameter(um)
