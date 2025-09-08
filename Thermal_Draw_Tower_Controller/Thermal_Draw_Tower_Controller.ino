@@ -144,7 +144,7 @@ void loop() {
       // TASK 3: Read micrometer and tension data
       float tension_Value = analogRead(tension_pin); 
       float fiber_diameter = analogRead(micrometer_pin);
-      fiber_diameter *= 9.77517; // analogRead outputs 1023 bits per 10V, then 2000 microns per V 
+      fiber_diameter *= 9.77517; // analogRead outputs 1023 bits per 5V, then 2000 microns per V 
 
       // TASK 5: Output readings to serial monitor and display
       Serial.print(millis()/1000.0);
