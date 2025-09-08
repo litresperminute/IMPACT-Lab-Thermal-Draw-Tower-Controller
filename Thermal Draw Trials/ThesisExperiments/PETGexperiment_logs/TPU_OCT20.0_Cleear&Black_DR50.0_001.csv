@@ -1,0 +1,11 @@
+# material: TPU
+# geometry: OCT
+# preform_diameter: 20.0
+# material_color: Cleear&Black
+# temperature_C: 160.0
+# drawdown_ratio: 50.0
+# trial_number: 001
+# operator: Nikoo
+# start_time: 2025-08-21 16:12:23
+# notes: Cunductive core with non-cunductive sheath
+Time(s),Feed(mm/min),Wind(m/min),Diameter(um),Predicted_diameter(um)

@@ -1,0 +1,11 @@
+# material: PETG
+# geometry: Cross
+# preform_diameter: 20mm
+# material_color: BlCK
+# temperature_C: 160c
+# drawdown_ratio: 50.0
+# trial_number: 001
+# operator: Nikoo
+# start_time: 2025-08-27 12:33:04
+# notes: Horizantally printed
+Time(s),Feed(mm/min),Wind(m/min),Diameter(um),Predicted_diameter(um)
