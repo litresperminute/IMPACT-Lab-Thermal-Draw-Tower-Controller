@@ -11,7 +11,7 @@ import os
 def find_port():
     ports = serial.tools.list_ports.comports()
     for p in ports:
-        if "Arduino" in p.description or "ttyACM" in p.device or "ttyUSB" in p.device:
+        if "Arduino" in p.description or "ttyACM" in p.device or "ttyUSB" in p.device or "usbmodem" in p.device:
             return p.device
     return None
 
@@ -110,8 +110,9 @@ def main():
     #Setup Output Directory
     log_dir = "Thermal Draw Trials\ThesisExperiments\PETGexperiment_logs"
     os.makedirs(log_dir, exist_ok=True)
-
+    
     port = find_port()
+ 
     if not port:
         print("No Arduino found.")
     else:
