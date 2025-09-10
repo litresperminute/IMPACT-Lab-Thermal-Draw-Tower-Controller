@@ -1,0 +1,11 @@
+# material: Nylon?
+# geometry: Circular
+# preform_diameter: 24.0
+# material_color: Translucent
+# temperature_C: 50.0
+# drawdown_ratio: 50.0
+# trial_number: 1
+# operator: Nikoo
+# start_time: 2025-09-10 10:22:16
+# notes: None
+Time(s),Feed(mm/min),Wind(m/min),Diameter(um),Predicted_diameter(um)
