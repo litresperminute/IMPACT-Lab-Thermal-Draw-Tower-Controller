@@ -1,0 +1,11 @@
+# material: 1
+# geometry: 1
+# preform_diameter: 20.0
+# material_color: 1
+# temperature_C: 1.0
+# drawdown_ratio: 1.0
+# trial_number: 1
+# operator: 1
+# start_time: 2025-09-09 15:22:57
+# notes: 1
+Time(s),Feed(mm/min),Wind(m/min),Diameter(um),Predicted_diameter(um)
