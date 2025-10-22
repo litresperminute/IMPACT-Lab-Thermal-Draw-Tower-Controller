@@ -1,0 +1,165 @@
+/* 
+ARDUNIO CONNECTION AND PINOUT SUMMARY:
+LED Display - GND/+5V/SCL/SDA (daisy-chained I2C cable)
+Digital Pot - GND/+5V/SCL/SDA (I2C cable plugged into +5V/GND/SCL/SDA Pins)
+Rotary Pot 1 - GND/A0/+5V (Used to manually control the feeder speed by adjusting the resistance/read voltage of the wiper pin from 0 - 5V in 10 turns)
+Rotary Pot 2 - GND/A1/+5V (Used to manually control the digital potentiometer by adjusting the resistance/read voltage of the wiper pin from 0 - 5V in 1 turnwhich controls the winder speed)
+Fans x 2 - GND/+5V (on either side of the stepper controller to push air through. No power or on/off control incorporated)
+Stepper: Enable / Direction / Pulse - D8/D7/D6 (enable is routed through an on/off switch || Direction is routed to a breadboard row, to which the centre pin from the switch is connected, the other two pins being tied to GND and +5V)
+(The intention of this decision is to enable the direction to be brute-force overtaken by the GND/+5V rails when closed in those positions, but to allow the digital pin to automate direction in the middle position.)
+Positive Carriage Limit Switch: +5V/GND - D2(write)/D3(read) (use interrupt pins to ensure stop command is triggered immediately?)
+Negative Carriage Limit Switch: +5V/GND - D4(write)/D5(read)
+Tensiometer Analog Signal: GND/+10V - voltage split to 5V max with 2x10kohm resistors and connected to pin A2 (GND is connected to device power supply, but may be floating and need to be properly grounded in the future)
+Winder Control Switch: Rot Pot 2 Wiper/On-Board Filabot Pot Wiper - GND/A3/+5V || GND/A3/+5V (voltage supplied here from filabot, not sourced from Arduino)
+Keyence Analog Diameter Readout: (Not sure what will be required but presumably at least 1 digital or analog pin connected that provides data from the keyence power block thing)
+*/
+
+#include <Adafruit_DS3502.h>  //Digital Potentiometer
+Adafruit_DS3502 ds3502 = Adafruit_DS3502();
+#define DS3502_ADDR 0x28 // I2C hex address of the DS3502 - RH to 5V / RL to GND / RW to WIPER_VALUE_PIN for rot pot 2
+
+
+#include <Wire.h>
+#include <Adafruit_GFX.h>
+#include <Adafruit_SSD1306.h>
+
+#define SCREEN_WIDTH 128 // OLED display width
+#define SCREEN_HEIGHT 32 // OLED display height
+#define SCREEN_ADDRESS 0x3C ///< See datasheet for Address; 0x3D for 128x64, 0x3C for 128x32
+#define OLED_RESET    -1 // Reset pin # (or -1 if sharing Arduino reset pin)
+Adafruit_SSD1306 display(SCREEN_WIDTH, SCREEN_HEIGHT, &Wire, OLED_RESET);
+
+/*
+Pretty sure the following section is unnecessary for our purposes
+
+#define NUMFLAKES     10 // Number of snowflakes in the animation example
+#define LOGO_HEIGHT   16
+#define LOGO_WIDTH    16
+static const unsigned char PROGMEM logo_bmp[] =
+{ 0b00000000, 0b11000000,
+  0b00000001, 0b11000000,
+  0b00000001, 0b11000000,
+  0b00000011, 0b11100000,
+  0b11110011, 0b11100000,
+  0b11111110, 0b11111000,
+  0b01111110, 0b11111111,
+  0b00110011, 0b10011111,
+  0b00011111, 0b11111100,
+  0b00001101, 0b01110000,
+  0b00011011, 0b10100000,
+  0b00111111, 0b11100000,
+  0b00111111, 0b11110000,
+  0b01111100, 0b11110000,
+  0b01110000, 0b01110000,
+  0b00000000, 0b00110000 };
+*/
+
+// define limit switch pins
+#define pos_limit_write D2 //supply voltage for NC (normally closed) circuit so that when it opens the read pin drops to GND voltage
+#define pos_limit_read D3 //read constantly for a change from the normally-closed value (presumably +5V) and interrupt code with a stop command
+#define neg_limit_write D4 //supply voltage for NC (normally closed) circuit so that when it opens the read pin drops to GND voltage
+#define neg_limit_read D5 //read constantly for a change from the normally-closed value (presumably +5V) and interrupt code with a stop command
+
+
+// define output (winder) pin
+#define WINDER_POT_VALUE_PIN A1 // this pin is always reading the values from rot pot 2 and using them to set the digital potentiometer which is then controlled by this value OR the on-board pot in the filafab winder (selected with toggle switch)
+
+
+// define input (feeder) pins
+#include <AccelStepper.h>
+#define interface 1   // interface == 1 indicates use of a stepper driver (equal to the enable+ pin?) (routed through an on/off switch for manual override control)
+#define step_pin 2    // stepper pin on the arduino (pulse+ pin)
+#define dir_pin 3     // direction pin on the arduino (dir+ pin) (routed to a 3-position rocker switch that can select REV/AUTO/FWD and manually override the program)
+#define feeder_speed_pot A0  // speed control pot on the arduino
+AccelStepper stepper(interface, step_pin, dir_pin);  // initialize stepper
+
+
+// define CLOCK: the frequency that the controller checks and updates motor speeds
+unsigned long previousMillis = 0; // stores the last time timer was updated
+const long interval = 200; //interval at which to refresh feed and winder speeds and update display (milliseconds)
+
+
+void setup() {
+  Serial.begin(115200);
+  // Wait until serial port is opened
+  while (!Serial) { delay(1); }
+
+  Serial.println("Adafruit DS3502 Test");
+
+  if (!ds3502.begin()) {
+    Serial.println("Couldn't find DS3502 chip");
+    while (1);
+  }
+  Serial.println("Found DS3502 chip");
+
+
+  // SSD1306_SWITCHCAPVCC = generate display voltage from 3.3V internally
+  if(!display.begin(SSD1306_SWITCHCAPVCC, SCREEN_ADDRESS)) {
+    Serial.println(F("SSD1306 allocation failed"));
+    for(;;); // Don't proceed, loop forever
+  }
+  Serial.println("well, we made it this far");
+
+  // Show initial display buffer contents on the screen --
+  // the library initializes this with an Adafruit splash screen.
+  display.display();
+  delay(2000); // Pause for 2 seconds
+
+  // Clear the buffer
+  display.clearDisplay();
+
+  // Initialize motor speed:
+  stepper.setMaxSpeed(1000);
+  stepper.setSpeed(100);
+}
+
+void loop() {
+  // RUN FEEDER
+  // Need to run stepper.runSpeed(); every iteration (as often as possible)
+  stepper.runSpeed();
+
+  // Check if enough time has (value of 'inverval' variable in ms) has passed
+  // If enough time has passed, execute the tasks below (read input and output speeds, update speeds based on controller settings)
+  unsigned long currentMillis = millis();
+  if (currentMillis - previousMillis >= interval) {
+    // Save the last time the interval completed
+    previousMillis = currentMillis;
+ 
+
+    // TASK 1: Update winder speed
+    float winder_pot_value = analogRead(WINDER_POT_VALUE_PIN); //Might be computationally better not to initialize this every loop but idk
+    winder_pot_value *= 0.2237; //Analog voltage reading to linear winding speed conversion = 0.2237mm/(s*Volt)
+    //winder_pot_value = round(winder_pot_value); //Optional rounding for easier formatting 
+    
+    //OPTIONAL SECTION: here you can give the Digi-pot a desired setting
+    //ds3502.setWiper(winder_pot_value);
+    //Serial.print("DS2502_wiper_setting");
+    //Serial.print(winder_pot_value);
+    //Serial.println(" mm/s");
+
+
+    // TASK 2: Update feed speed
+    float feeder_pot_value = analogRead(feeder_speed_pot);
+    Serial.println(feeder_pot_value);
+    feeder_pot_value /= 1023;
+    feeder_pot_value *= 100;
+    float feeder_speed = feeder_pot_value*5.08/800*60; //conversion from potentiometer reading to feed speed in mm/min
+    stepper.setSpeed(feeder_pot_value);
+
+
+    // TASK 3: Update Display
+    // Display the linear feed speed
+    display.clearDisplay();// Clear the buffer
+    display.setTextSize(1);
+    display.setTextColor(WHITE);
+    display.setCursor(0, 0);
+    // Display static text
+    display.print("Winder Spd:");
+    display.print(winder_pot_value);
+    display.println("mm/s");
+    display.print("Feed Spd:");
+    display.print(feeder_speed);
+    display.print("mm/min");
+    display.display(); 
+  }
+}

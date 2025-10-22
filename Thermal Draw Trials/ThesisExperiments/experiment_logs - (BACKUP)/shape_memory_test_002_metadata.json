@@ -1,0 +1,11 @@
+{
+    "experiment_id": "shape_memory_test_002",
+    "material": "",
+    "material_color": "red",
+    "preform_diameter": 20.0,
+    "temperature_C": 150.0,
+    "drawdown_ratio": null,
+    "operator": "Kevin Liu",
+    "start_time": "2025-05-16 13:09:51",
+    "notes": ""
+}

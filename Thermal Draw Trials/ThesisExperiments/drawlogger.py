@@ -46,7 +46,7 @@ def save_metadata(log_dir):
     operator = input("Operator name: ")
     notes = input("Enter any notes (optional): ").replace(",",";") # Take out commas and replace them with something else
 
-    file_name = f"{material}_{geometry}{preform_diameter}_{material_color}_DR{drawdown_ratio}_{trial_number}"
+    file_name = f"{material}_{geometry}{preform_diameter}_{material_color}_DR{drawdown_ratio}_{trial_number}" ####BUGFIX REQUEST: PREVENT SAVING OVER EXISTING FILES WITH THE SAME NAME
 
     timestamp = datetime.now().strftime("%Y-%m-%d %H:%M:%S")
     csv_filename = os.path.join(log_dir, f"{file_name}.csv")
