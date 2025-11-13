@@ -1,0 +1,11 @@
+# material: Nylon PA6 Rod
+# geometry: cyl
+# preform_diameter: 20.0
+# material_color: White
+# temperature_C: 260.0
+# drawdown_ratio: 50.0
+# trial_number: 031
+# operator: Akila
+# start_time: 2025-10-28 11:35:15
+# notes: 
+Time(s),Feed(mm/min),Wind(m/min),Diameter(um),Predicted_diameter(um)

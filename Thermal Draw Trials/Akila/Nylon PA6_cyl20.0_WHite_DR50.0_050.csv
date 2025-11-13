@@ -1,0 +1,11 @@
+# material: Nylon PA6
+# geometry: cyl
+# preform_diameter: 20.0
+# material_color: WHite
+# temperature_C: 202.0
+# drawdown_ratio: 50.0
+# trial_number: 050
+# operator: Akila
+# start_time: 2025-11-12 15:13:41
+# notes: Feeding speeds are same as 047; both ends sealed close.
+Time(s),Feed(mm/min),Wind(m/min),Diameter(um),Predicted_diameter(um)
