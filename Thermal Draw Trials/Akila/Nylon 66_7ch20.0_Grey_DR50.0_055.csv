@@ -1,0 +1,11 @@
+# material: Nylon 66
+# geometry: 7ch
+# preform_diameter: 20.0
+# material_color: Grey
+# temperature_C: 160.0
+# drawdown_ratio: 50.0
+# trial_number: 055
+# operator: Akila
+# start_time: 2025-11-17 14:57:31
+# notes: Default draw speed; both ends sealed close.
+Time(s),Feed(mm/min),Wind(m/min),Diameter(um),Predicted_diameter(um)

@@ -1,0 +1,11 @@
+# material: Performance Nylon (PA6CF)
+# geometry: cyl 3ch
+# preform_diameter: 20.0
+# material_color: GRey
+# temperature_C: 230.0
+# drawdown_ratio: 50.0
+# trial_number: 071
+# operator: Akila
+# start_time: 2025-11-26 15:26:05
+# notes: Draw and feed speed set to 3.75 m per min and 1.5 mm per min. Both ends sealed close.
+Time(s),Feed(mm/min),Wind(m/min),Diameter(um),Predicted_diameter(um)
