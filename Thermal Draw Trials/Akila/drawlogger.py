@@ -1,4 +1,5 @@
 import serial
+import matplotlib.pyplot as plt
 import serial.tools.list_ports
 import csv
 import json
@@ -6,6 +7,7 @@ import time
 from datetime import datetime
 import os
 
+plt.ion()
 
 # === STEP 1: Detect Arduino Port ===
 def find_port():
@@ -78,6 +80,21 @@ def save_metadata(log_dir):
 
 # === STEP 3: Log Serial Data (Filter + Print Non-Data Lines) ===
 def log_serial_data(port, baud=115200, csv_filename='Unnamed_trial'):
+    start_time = time.time()
+
+    times = []
+    diam_calc = []
+    diam_pred = []
+
+    fig, ax = plt.subplots()
+    line_calc, = ax.plot([], [], label="Measured Diameter")
+    line_pred, = ax.plot([], [], label="Predicted Diameter")
+
+    ax.set_xlabel("Time (s)")
+    ax.set_ylabel("Diameter (µm)")
+    ax.legend()
+    ax.grid(True)
+    
     try:
         with serial.Serial(port, baud, timeout=1) as ser, open(csv_filename, 'a', newline='') as csvfile:
             print(f"\nLogging started. Press Ctrl+C to stop.\nSaving to: {csv_filename}")
@@ -100,8 +117,32 @@ def log_serial_data(port, baud=115200, csv_filename='Unnamed_trial'):
                     parts = line.split(",")
                     if len(parts) == 5:
                         writer.writerow(parts)
+
+                        try:
+                            t = float(parts[0])
+                            d_calc = float(parts[3])
+                            d_pred = float(parts[4])
+
+                            times.append(t)
+                            diam_calc.append(d_calc)
+                            diam_pred.append(d_pred)
+
+                        # Update plot every N points to avoid lag
+                            if len(times) % 5 == 0:
+                                line_calc.set_data(times, diam_calc)
+                                line_pred.set_data(times, diam_pred)
+
+                                ax.relim()
+                                ax.autoscale_view()
+
+                                plt.pause(0.01)
+
+                        except ValueError:
+                            pass  # ignore malformed numeric data
     except KeyboardInterrupt:
         print(f"\nLogging stopped by user. Saved to {csv_filename}")
+        plt.savefig(csv_filename.replace(".csv", ".png"), dpi=300)
+        plt.close()
     except Exception as e:
         print("Error:", e)
 
