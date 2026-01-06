@@ -86,7 +86,7 @@ def log_serial_data(port, baud=115200, csv_filename='Unnamed_trial'):
     diam_calc = []
     diam_pred = []
 
-    fig, ax = plt.subplots()
+    fig, ax = plt.subplots(figsize=(15, 2.5))
     line_calc, = ax.plot([], [], label="Measured Diameter")
     line_pred, = ax.plot([], [], label="Predicted Diameter")
 
