@@ -149,7 +149,7 @@ def log_serial_data(port, baud=115200, csv_filename='Unnamed_trial'):
 # === Run Everything ===
 def main():
     #Setup Output Directory
-    log_dir = "C:\\Users\\aabdelr1\\Documents\\GitHub\\IMPACT-Lab-Thermal-Draw-Tower-Controller\\Thermal Draw Trials\\2026 Trials"
+    log_dir = "C:\\Users\\yapamudi\\Documents\\GitHub\\IMPACT-Lab-Thermal-Draw-Tower-Controller\\Thermal Draw Trials\\2026 Trials"
     os.makedirs(log_dir, exist_ok=True)
     
     port = find_port()
