@@ -14,12 +14,11 @@ def prompt_yn(prompt):
             result = False
     return result
 
-
 # === Settings ===
 
 
 experiment_id = input("Experiment ID: ") # CLEAR PETG NO FEEDBACK 160C DR50
-log_dir = "D:\\PhD (UofA)\\PhD research\\Dan Projects\\Thermal Drawing\\Akila (Thermal Drawing)\\Collected Data"
+log_dir = "D:\\IMPACT-Lab-Thermal-Draw-Tower-Controller\\Thermal Draw Trials\\Ahmed"
 fig_dir = "figures"
 os.makedirs(fig_dir, exist_ok=True)
 
