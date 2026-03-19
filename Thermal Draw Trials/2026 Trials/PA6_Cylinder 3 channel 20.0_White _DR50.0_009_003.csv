@@ -1,0 +1,24 @@
+# material: PA6
+# geometry: Cylinder 3 channel 
+# preform_diameter: 20.0
+# material_color: White 
+# temperature_C: NONE
+# drawdown_ratio: 50.0
+# trial_number: 009_003
+# operator: Hamdi
+# start_time: 2026-03-19 12:24:36
+# notes: Measuring the fiber diameter 
+Time(s),Feed(mm/min),Wind(m/min),Diameter(um),Predicted_diameter(um)
+1.22,1.93,4.62,513.20,408.62
+1.42,1.94,4.63,478.98,409.01
+1.62,1.94,4.63,435.00,409.01
+1.82,1.94,4.63,439.88,409.01
+2.02,1.95,4.63,425.22,410.00
+2.22,1.95,4.63,435.00,410.00
+2.42,1.93,4.63,425.22,408.03
+2.62,1.93,4.62,425.22,408.62
+2.82,1.94,4.63,444.77,409.01
+3.02,1.93,4.63,444.77,408.03
+3.22,1.93,4.63,444.77,408.03
+3.42,1.93,4.63,439.88,408.03
+3.62,1.94,4.62,439.88,409.61
