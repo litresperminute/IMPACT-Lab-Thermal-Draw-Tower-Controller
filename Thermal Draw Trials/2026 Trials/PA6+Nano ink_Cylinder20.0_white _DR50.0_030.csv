@@ -1,0 +1,11 @@
+# material: PA6+Nano ink
+# geometry: Cylinder
+# preform_diameter: 20.0
+# material_color: white 
+# temperature_C: 85290.0
+# drawdown_ratio: 50.0
+# trial_number: 030
+# operator: Ahmed_Akila
+# start_time: 2026-03-31 09:53:14
+# notes: Old nano
+Time(s),Feed(mm/min),Wind(m/min),Diameter(um),Predicted_diameter(um)

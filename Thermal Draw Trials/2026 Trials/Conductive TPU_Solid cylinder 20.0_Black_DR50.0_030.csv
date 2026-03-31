@@ -1,0 +1,11 @@
+# material: Conductive TPU
+# geometry: Solid cylinder 
+# preform_diameter: 20.0
+# material_color: Black
+# temperature_C: 200.0
+# drawdown_ratio: 50.0
+# trial_number: 030
+# operator: Ahmed
+# start_time: 2026-03-31 10:54:29
+# notes: I increased the temperature to 290 before start the test
+Time(s),Feed(mm/min),Wind(m/min),Diameter(um),Predicted_diameter(um)
