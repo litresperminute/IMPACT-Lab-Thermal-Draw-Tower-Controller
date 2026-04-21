@@ -1,0 +1,11 @@
+# material: Nylon PA6
+# geometry: Single Channel + Ink
+# preform_diameter: 20.0
+# material_color: White
+# temperature_C: 290.0
+# drawdown_ratio: 50.0
+# trial_number: 027
+# operator: Ahmed_Akila
+# start_time: 2026-03-24 11:50:39
+# notes: 
+Time(s),Feed(mm/min),Wind(m/min),Diameter(um),Predicted_diameter(um)
