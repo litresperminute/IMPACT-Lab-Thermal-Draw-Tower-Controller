@@ -1,0 +1,11 @@
+# material: PA6
+# geometry: Rectangular solid conentric pattern
+# preform_diameter: 205.0
+# material_color: White
+# temperature_C: 85290.0
+# drawdown_ratio: 50.0
+# trial_number: 03
+# operator: C:\Users\aabdelr1\AppData\Local\Microsoft\WindowsApps\python3.13.exe "c:/Users/aabdelr1/Documents/GitHub/IMPACT-Lab-Thermal-Draw-Tower-Controller/Thermal Draw Trials/2026 Trials/drawlogger_Ahmed.py"
+# start_time: 2026-04-29 15:29:46
+# notes: C:\Users\aabdelr1\AppData\Local\Microsoft\WindowsApps\python3.13.exe "c:/Users/aabdelr1/Documents/GitHub/IMPACT-Lab-Thermal-Draw-Tower-Controller/Thermal Draw Trials/2026 Trials/drawlogger_Ahmed.py"
+Time(s),Feed(mm/min),Wind(m/min),Diameter(um),Predicted_diameter(um)
