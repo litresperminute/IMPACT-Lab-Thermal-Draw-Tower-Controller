@@ -1,0 +1,11 @@
+# material: PLA
+# geometry: Cylinder 
+# preform_diameter: 20.0
+# material_color: White_Arctic Teal_Yellow_Red
+# temperature_C: 50210.0
+# drawdown_ratio: 50.0
+# trial_number: 044
+# operator: Ahmed
+# start_time: 2026-05-12 15:38:17
+# notes: Trial to stand on the fesability of the new silicon part 
+Time(s),Feed(mm/min),Wind(m/min),Diameter(um),Predicted_diameter(um)
