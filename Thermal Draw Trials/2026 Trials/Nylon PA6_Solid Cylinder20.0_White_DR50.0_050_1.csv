@@ -1,0 +1,11 @@
+# material: Nylon PA6
+# geometry: Solid Cylinder
+# preform_diameter: 20.0
+# material_color: White
+# temperature_C: 29085.0
+# drawdown_ratio: 50.0
+# trial_number: 050_1
+# operator: Ahmed
+# start_time: 2026-05-23 14:30:27
+# notes: Second test for 0.3 mm 
+Time(s),Feed(mm/min),Wind(m/min),Diameter(um),Predicted_diameter(um)
