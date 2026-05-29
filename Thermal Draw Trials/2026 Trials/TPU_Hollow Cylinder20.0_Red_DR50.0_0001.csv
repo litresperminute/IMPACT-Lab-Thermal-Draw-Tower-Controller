@@ -1,0 +1,11 @@
+# material: TPU
+# geometry: Hollow Cylinder
+# preform_diameter: 20.0
+# material_color: Red
+# temperature_C: No Preheating_180
+# drawdown_ratio: 50.0
+# trial_number: 0001
+# operator: AHmed
+# start_time: 2026-05-29 13:33:21
+# notes: 
+Time(s),Feed(mm/min),Wind(m/min),Diameter(um),Predicted_diameter(um)
