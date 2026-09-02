@@ -1,0 +1,11 @@
+# material: Nylon PA6
+# geometry: Solid Cylinder
+# preform_diameter: 20.0
+# material_color: White
+# temperature_C: 29085.0
+# drawdown_ratio: 50.0
+# trial_number: 050_5
+# operator: Akila_Ahmed
+# start_time: 2026-06-02 12:43:46
+# notes: Feed and draw speeds set to 1.2 mm per min and 3.0 m per min. 0.3 Layer Thickness Experiment.
+Time(s),Feed(mm/min),Wind(m/min),Diameter(um),Predicted_diameter(um)
